@@ -64,6 +64,14 @@ export class PanelManager {
     if (template) {
       panelTitle.textContent = title;
       panelContent.innerHTML = template.innerHTML;
+      
+      // Add/remove layers-panel class based on which panel is opening
+      if (templateId === "layersPanelTemplate") {
+        panel.classList.add("layers-panel");
+      } else {
+        panel.classList.remove("layers-panel");
+      }
+      
       panel.classList.add("active");
 
       // Initialize panel-specific functionality
@@ -125,7 +133,15 @@ export class PanelManager {
    */
   closeSidePanel() {
     const panel = document.getElementById("sidePanel");
+    
+    // Wait for transition to complete before removing layers-panel class
+    // This prevents the background from showing during the close animation
     panel.classList.remove("active");
+    
+    // Remove layers-panel class after transition completes (300ms)
+    setTimeout(() => {
+      panel.classList.remove("layers-panel");
+    }, 300);
 
     // Clean up any active states
     document.querySelectorAll(".toolbar-btn").forEach((btn) => {

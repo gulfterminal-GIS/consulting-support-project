@@ -453,21 +453,22 @@ export class LayerManager {
     console.log(`🎨 Rendering group layer: ${groupLayer.title} (ID: ${groupId})`);
     
     let html = `
-      <div class="layer-group collapsed" data-group-id="${groupId}">
-        <div class="layer-group-header" data-group-id="${groupId}">
-          <button class="group-toggle" data-group-id="${groupId}" type="button" title="توسيع/طي">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <label for="group-${layerIndex}" class="layer-name group-name" onclick="event.stopPropagation();">
-            <i class="fas fa-folder"></i>
-            ${groupLayer.title}
-            <span class="layer-count">(${childLayers.length})</span>
-          </label>
-          <input type="checkbox" class="layer-checkbox" id="group-${layerIndex}" 
-                ${groupLayer.visible ? "checked" : ""} 
-                onchange="event.stopPropagation(); toggleGroupLayer(${layerIndex})">
-        </div>
-        <div class="layer-group-children collapsed" id="group-children-${groupId}">
+      <liquid-glass-effect>
+        <div class="layer-group collapsed" data-group-id="${groupId}">
+          <div class="layer-group-header" data-group-id="${groupId}">
+            <button class="group-toggle" data-group-id="${groupId}" type="button" title="توسيع/طي">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <label for="group-${layerIndex}" class="layer-name group-name" onclick="event.stopPropagation();">
+              <i class="fas fa-folder"></i>
+              ${groupLayer.title}
+              <span class="layer-count">(${childLayers.length})</span>
+            </label>
+            <input type="checkbox" class="layer-checkbox" id="group-${layerIndex}" 
+                  ${groupLayer.visible ? "checked" : ""} 
+                  onchange="event.stopPropagation(); toggleGroupLayer(${layerIndex})">
+          </div>
+          <div class="layer-group-children collapsed" id="group-children-${groupId}">
     `;
     
     // Render child layers
@@ -498,8 +499,9 @@ export class LayerManager {
     });
     
     html += `
+          </div>
         </div>
-      </div>
+      </liquid-glass-effect>
     `;
     
     console.log(`✅ Rendered group layer: ${groupId}`);

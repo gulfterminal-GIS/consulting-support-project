@@ -52,12 +52,20 @@ export class ToolbarManager {
       });
     }
 
-    // Layers button
+    // Layers button - with toggle functionality
     const layersBtn = document.getElementById("layersBtn");
     if (layersBtn) {
       layersBtn.addEventListener("click", () => {
-        layersBtn.classList.toggle("active");
-        this.panelManager.openSidePanel("الطبقات", "layersPanelTemplate");
+        const panel = document.getElementById("sidePanel");
+        const isLayersPanelOpen = panel.classList.contains("active") && panel.classList.contains("layers-panel");
+        
+        if (isLayersPanelOpen) {
+          // If layers panel is already open, close it
+          this.panelManager.closeSidePanel();
+        } else {
+          // Otherwise, open the layers panel
+          this.panelManager.openSidePanel("الطبقات", "layersPanelTemplate");
+        }
       });
     }
 
