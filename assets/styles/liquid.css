@@ -1,0 +1,45 @@
+/* LIQUID GLASS STYLES */
+
+:root {
+    --shadow-liquid: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.liquidGlass-wrapper {
+    position: relative;
+    display: flex;
+    font-weight: 600;
+    overflow: hidden;
+    box-shadow: var(--shadow-liquid);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+    border-radius: 1rem;
+}
+
+.liquidGlass-effect {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    backdrop-filter: blur(4px);
+    filter: url(#glass-distortion); /* SVG filter for distortion effect, embedded in HTML */
+    overflow: hidden;
+}
+
+.liquidGlass-tint {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: rgba(36, 36, 36, 0.2);
+}
+
+.liquidGlass-shine {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    box-shadow: inset 1px 1px 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.liquidGlass-content {
+    z-index: 3;
+    width: 100%;
+}

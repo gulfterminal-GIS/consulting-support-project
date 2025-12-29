@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Widgets</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="widgets.css">
+</head>
+<body>
+    <div class="toolbar">
+        <label class="toolbar-label" for="gardens">
+            <input type="radio" name="toolbar" id="gardens" checked>
+            الحدائق
+        </label>
+        <label class="toolbar-label" for="projects">
+            <input type="radio" name="toolbar" id="projects">
+            المشاريع
+        </label>
+        <label class="toolbar-label" for="assets">
+            <input type="radio" name="toolbar" id="assets">
+            الأصول
+        </label>
+    </div>
+
+    <div class="feature-tour-controls">
+        <header>
+            <small>3345 / 2</small>
+            <div class="map-actions">
+                <img class="forward-control" src="/assets/images/fluent_next-24-regular.svg" alt="">
+                <div class="auto-control pause"></div>
+                <img class="backward-control" src="/assets/images/fluent_next-24-regular-back.svg" alt="">
+            </div>
+            <div class="chevron">
+                <i class="bi bi-chevron-up"></i>
+                <!-- <i class="bi bi-chevron-down"></i> -->
+            </div>
+        </header>
+
+        <section class="overview">
+            <div>
+                <p class="name">حديقة 2</p>
+                <p class="area">154544515 متر مربع</p>
+            </div>
+            <div class="status">مستقبلي</div>
+        </section>
+
+        <section class="details">
+            <div class="item">
+                <p class="label">المساحة:</p>
+                <span class="value">154544515 متر مربع</span>
+            </div>
+            <div class="item">
+                <span class="label">الموقع:</span>
+                <span class="value">الرياض</span>
+            </div>
+            <div class="item">
+                <span class="label">الموقع:</span>
+                <span class="value">الرياض</span>
+            </div>
+            <div class="item">
+                <span class="label">الموقع:</span>
+                <span class="value">الرياض</span>
+            </div>
+            <div class="item">
+                <span class="label">الموقع:</span>
+                <span class="value">الرياض</span>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const chevron = document.querySelector('.chevron i');
+        const detailsSection = document.querySelector('.details');
+        const autoControl = document.querySelector('.auto-control');
+
+        // Utility to show/hide details and sync chevron + auto-control state
+        function setDetailsVisible(visible) {
+            detailsSection.style.display = visible ? 'flex' : 'none';
+            if (visible) {
+                chevron.classList.remove('bi-chevron-up');
+                chevron.classList.add('bi-chevron-down');
+                // auto-control: when playing, show pause icon (class 'pause')
+                autoControl.classList.remove('pause');
+                autoControl.classList.add('play');
+            } else {
+                chevron.classList.remove('bi-chevron-down');
+                chevron.classList.add('bi-chevron-up');
+                // auto-control: when paused, show play icon (class 'play')
+                autoControl.classList.remove('play');
+                autoControl.classList.add('pause');
+            }
+        }
+
+        // Initialize state (details visible by default)
+        setDetailsVisible(true);
+
+        chevron.addEventListener('click', () => {
+            const hidden = detailsSection.style.display === 'none';
+            setDetailsVisible(hidden);
+        });
+
+        autoControl.addEventListener('click', () => {
+            // Toggle play/pause which also toggles details visibility
+            const isPausing = autoControl.classList.contains('play');
+            setDetailsVisible(!isPausing);
+        });
+    </script>
+</body>
+</html>
