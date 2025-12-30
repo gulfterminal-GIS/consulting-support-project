@@ -390,6 +390,12 @@ body {
 .loading-screen.fade-out {
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
+}
+
+/* Ensure login screen is completely removed after fade */
+.loading-screen.fade-out * {
+  pointer-events: none !important;
 }
 
 /* Top Bar */
