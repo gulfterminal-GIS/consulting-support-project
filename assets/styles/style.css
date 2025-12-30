@@ -1,5 +1,6 @@
 /* ========================================
    Modern GIS Web Application Styles
+   Updated: 2024-12-30 23:45 - PAGINATION FIX v5 + Glass Verification
    ======================================== */
 
 /* Reset and Variables */
@@ -91,18 +92,275 @@ body {
 }
 
 /* Loading Screen */
+/* Login Screen - v2024.12.30.008 */
 .loading-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #00172B;
+  background: linear-gradient(135deg, #00172B 0%, #001a33 50%, #002244 100%);
+  display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
   transition: opacity var(--transition-slow);
+}
 
+.login-container {
+  width: 100%;
+  max-width: 480px;
+  padding: var(--spacing-xl);
+}
+
+.login-box {
+  padding: 3rem 2.5rem;
+  background: transparent;
+  border-radius: var(--radius-lg);
+}
+
+/* Add proper spacing to liquidGlass-wrapper in login */
+.login-screen .liquidGlass-wrapper {
+  border-radius: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  direction: rtl;
+}
+
+.login-logo {
+  height: 90px;
+  margin-bottom: 1.5rem;
+  animation: logoFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(33, 150, 243, 0.3));
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.login-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.login-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  direction: rtl;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding-right: 0.25rem;
+}
+
+.form-label i {
+  color: var(--primary-light);
+  font-size: 18px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.75rem;
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-align: right;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(244, 67, 54, 0.25);
+  border: 2px solid rgba(244, 67, 54, 0.6);
+  border-radius: 0.75rem;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  animation: shake 0.5s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.login-error i {
+  color: #ff5252;
+  font-size: 20px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 1.125rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  border: none;
+  border-radius: 0.75rem;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.45);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.login-btn:hover::before {
+  left: 100%;
+}
+
+.login-btn:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-btn i {
+  font-size: 20px;
+}
+
+/* Loading spinner for login button */
+.login-btn .spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Loading state after successful login */
+.login-loading {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  text-align: center;
+  color: #fff;
+  padding: 3rem 2.5rem;
+}
+
+.login-loading.active {
+  display: flex;
+}
+
+.login-loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.login-loading-text {
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  direction: rtl;
+}
+
+.login-loading-logo {
+  height: 70px;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 12px rgba(33, 150, 243, 0.3));
+}
+
+/* Remove dark tint from login box */
+.login-screen .liquidGlass-tint {
+  background: transparent !important;
 }
 
 .loading-content {
@@ -159,6 +417,7 @@ body {
     height: auto;
     width: 5rem;
     font-size: 24px;
+    display: none; /* Hide the logo */
 }
 
 .brand {
@@ -494,9 +753,9 @@ body {
   right: 0;
   width: 400px;
   background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(30px);
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3), inset 1px 0 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
   transform: translateX(100%);
   transition: transform var(--transition-normal);
   z-index: 350;
@@ -506,31 +765,154 @@ body {
   backface-visibility: hidden;
 }
 
+/* Remove side panel background/backdrop when showing layers panel */
+.side-panel.layers-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+}
+
+/* Apply same styling to upload panel */
+.side-panel.upload-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+  width: 400px; /* Same width as layers panel */
+  max-width: 400px;
+}
+
+/* Apply same styling to basemap panel */
+.side-panel.basemap-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+  width: 400px; /* Same width as layers panel */
+  max-width: 400px;
+}
+
+/* Apply same styling to drawing panel */
+.side-panel.drawing-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+  width: 400px; /* Same width as layers panel */
+  max-width: 400px;
+}
+
+/* Apply same styling to analysis panel */
+.side-panel.analysis-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+  width: 400px; /* Same width as layers panel */
+  max-width: 400px;
+}
+
+/* Apply same styling to classification panel */
+.side-panel.classification-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+  width: 400px; /* Same width as layers panel */
+  max-width: 400px;
+}
+
+/* Apply same styling to reports panel */
+.side-panel.reports-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+  width: 400px; /* Same width as layers panel */
+  max-width: 400px;
+}
+
+/* Apply same styling to advanced search panel */
+.side-panel.advanced-search-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  padding-top: 80px; /* Add space to avoid top toolbar */
+  z-index: 50; /* Lower z-index so region buttons are clickable */
+  pointer-events: none; /* Allow clicks to pass through transparent areas */
+  width: 400px; /* Same width as layers panel */
+  max-width: 400px;
+}
+
+/* Re-enable pointer events on the actual content */
+.side-panel.layers-panel .side-panel-content {
+  pointer-events: auto;
+}
+
+.side-panel.upload-panel .panel-section,
+.side-panel.basemap-panel .panel-section,
+.side-panel.drawing-panel .panel-section,
+.side-panel.analysis-panel .panel-section,
+.side-panel.classification-panel .panel-section,
+.side-panel.reports-panel .panel-section,
+.side-panel.advanced-search-panel .panel-section {
+  pointer-events: auto;
+  /* Removed width: fit-content to allow full width */
+  /* width: fit-content; */
+}
+
 .side-panel.active {
   transform: translateX(0);
 }
 
 .side-panel-header {
+  display: none; /* Hide the header completely */
+}
+
+/* Show header for non-special panels (not layers, upload, basemap, drawing, analysis, classification, reports, or advanced-search) */
+.side-panel:not(.layers-panel):not(.upload-panel):not(.basemap-panel):not(.drawing-panel):not(.analysis-panel):not(.classification-panel):not(.reports-panel):not(.advanced-search-panel) .side-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-lg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
 }
 
 .side-panel-header h2 {
   font-size: 20px;
   font-weight: 600;
   color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .side-panel-close {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   cursor: pointer;
   padding: var(--spacing-sm);
@@ -542,23 +924,85 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .side-panel-close:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .side-panel-content {
   flex: 1;
   overflow-y: auto;
   padding: var(--spacing-lg);
-  background: rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
+  background: transparent;
+}
+
+/* Make upload panel content narrower and not block map */
+.side-panel.upload-panel .side-panel-content {
+  flex: 1; /* Allow to grow */
+  width: 100%; /* Full width of panel */
+  max-width: 400px; /* Match panel width */
+  padding-right: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+  margin-left: 0;
+  pointer-events: auto;
+}
+
+/* Make basemap panel content narrower and not block map */
+.side-panel.basemap-panel .side-panel-content {
+  flex: 1; /* Allow to grow */
+  width: 100%; /* Full width of panel */
+  max-width: 400px; /* Match panel width */
+  padding-right: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+  margin-left: 0;
+  pointer-events: auto;
+}
+
+/* Make drawing panel content narrower and not block map */
+.side-panel.drawing-panel .side-panel-content {
+  flex: 1; /* Allow to grow */
+  width: 100%; /* Full width of panel */
+  max-width: 400px; /* Match panel width */
+  padding-right: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+  margin-left: 0;
+  pointer-events: auto;
+}
+
+/* Make analysis panel content narrower and not block map */
+.side-panel.analysis-panel .side-panel-content {
+  flex: 1; /* Allow to grow */
+  width: 100%; /* Full width of panel */
+  max-width: 400px; /* Match panel width */
+  padding-right: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+  margin-left: 0;
+  pointer-events: auto;
+}
+
+/* Make classification panel content narrower and not block map */
+.side-panel.classification-panel .side-panel-content {
+  flex: 1; /* Allow to grow */
+  width: 100%; /* Full width of panel */
+  max-width: 400px; /* Match panel width */
+  padding-right: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+  margin-left: 0;
+  pointer-events: auto;
+}
+
+/* Make advanced search panel content narrower and not block map */
+.side-panel.advanced-search-panel .side-panel-content {
+  flex: 1; /* Allow to grow */
+  width: 100%; /* Full width of panel */
+  max-width: 400px; /* Match panel width */
+  padding-right: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+  margin-left: 0;
+  pointer-events: auto;
 }
 
 /* Panel Sections */
@@ -575,6 +1019,18 @@ body {
   display: block;
   border-radius: var(--radius-lg);
 }
+
+/* Add background color to liquid-glass-effect for specific widgets - v2024.12.30.004 */
+.side-panel.upload-panel .panel-section > liquid-glass-effect,
+.side-panel.basemap-panel .panel-section > liquid-glass-effect,
+.side-panel.drawing-panel .panel-section > liquid-glass-effect,
+.side-panel.analysis-panel .panel-section > liquid-glass-effect,
+.side-panel.classification-panel .panel-section > liquid-glass-effect,
+.side-panel.reports-panel .panel-section > liquid-glass-effect {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+
 
 /* Adjust quick actions position */
 .quick-actions {
@@ -680,43 +1136,83 @@ body {
 
 /* Drop Zone */
 .drop-zone {
-  border: 2px dashed var(--border-color);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   text-align: center;
   transition: all var(--transition-normal);
   cursor: pointer;
-  background: black;
+  background: transparent; /* Remove background, let glass effect handle it */
+  min-height: 280px;
+  width: 100%; /* Full width of container */
+  max-width: 100%; /* Use full available width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10; /* Ensure content is above glass layers */
+  margin: 0;
 }
 
 .drop-zone:hover,
 .drop-zone.drag-over {
-  border-color: var(--primary-color);
-  background: rgba(0, 0, 0, 0.5);
+  border-color: var(--primary-light);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Remove dark tint from upload drop zone */
+.panel-section > liquid-glass-effect:has(.drop-zone) .liquidGlass-tint {
+  background: transparent !important;
+}
+
+/* Ensure drop zone content is visible */
+.panel-section > liquid-glass-effect:has(.drop-zone) .liquidGlass-effect,
+.panel-section > liquid-glass-effect:has(.drop-zone) .liquidGlass-tint,
+.panel-section > liquid-glass-effect:has(.drop-zone) .liquidGlass-shine {
+  pointer-events: none;
+}
+
+.panel-section > liquid-glass-effect:has(.drop-zone) .liquidGlass-content {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
 }
 
 .drop-zone-icon {
   font-size: 48px;
   color: var(--primary-light);
   margin-bottom: var(--spacing-md);
+  position: relative;
+  z-index: 10;
 }
 
 .drop-zone h3 {
   font-size: 18px;
-  font-weight: 500;
-  color: white;
+  font-weight: 600;
+  color: #fff !important;
   margin-bottom: var(--spacing-xs);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
+  opacity: 1 !important;
 }
 
 .drop-zone p {
-  color: rgba(255, 255, 255, 0.7);
+  color: #fff !important;
   margin-bottom: var(--spacing-md);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
+  opacity: 1 !important;
 }
 
 .supported-formats {
   display: flex;
   gap: var(--spacing-sm);
   justify-content: center;
+  position: relative;
+  z-index: 10;
 }
 
 .format-badge {
@@ -733,16 +1229,117 @@ body {
   max-height: 852px;
   overflow-y: auto;
   padding: var(--spacing-md);
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(15px);
+  /* Remove any custom background - let liquid-glass-effect handle it */
+  background: rgb(255 255 255 / 10%) !important;
+  /* background-color: rgb(255 255 255 / 10%) !important; */
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 10; /* Ensure content is above glass effect layers */
+}
+
+/* Fix scrolling - prevent border clipping */
+.layer-list > liquid-glass-effect .liquidGlass-wrapper {
+  overflow: visible !important; /* Allow borders to show when scrolling */
+}
+
+/* Ensure liquid-glass-effect wrapper for layer list has proper styling */
+.panel-section > liquid-glass-effect {
+  display: block;
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+
+.panel-section > liquid-glass-effect .liquidGlass-wrapper {
+  border-radius: var(--radius-lg);
+  display: block;
+  position: relative;
+}
+
+/* Add border overlay for main container that stays on top when scrolling */
+.panel-section > liquid-glass-effect .liquidGlass-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  z-index: 100; /* Very high to stay above scrolling content */
+}
+
+.panel-section > liquid-glass-effect .liquidGlass-effect,
+.panel-section > liquid-glass-effect .liquidGlass-tint,
+.panel-section > liquid-glass-effect .liquidGlass-shine {
+  pointer-events: none; /* Allow clicks to pass through glass layers */
+  border-radius: var(--radius-lg);
+}
+
+.panel-section > liquid-glass-effect .liquidGlass-content {
+  display: block;
+  pointer-events: auto; /* Re-enable clicks on content */
+  border-radius: var(--radius-lg);
 }
 
 /* Layer Group Styles */
 .layer-group {
   margin-bottom: var(--spacing-md);
+}
+
+/* Glass effect wrapper for each group */
+.layer-list > liquid-glass-effect {
+  display: block;
+  margin-bottom: var(--spacing-md);
+  position: relative;
+  z-index: 1; /* Ensure borders stay on top */
+}
+
+.layer-list > liquid-glass-effect:last-child {
+  margin-bottom: 0;
+}
+
+.layer-list > liquid-glass-effect .liquidGlass-wrapper {
+  border-radius: var(--radius-lg); /* Rounded borders for groups */
+  position: relative;
+  z-index: 1;
+}
+
+/* Add a pseudo-element for the border that stays on top */
+.layer-list > liquid-glass-effect .liquidGlass-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg); /* Match the wrapper radius */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+  z-index: 10; /* Higher than content */
+}
+
+/* Remove dark tint from group layers to make text pure white */
+.layer-list > liquid-glass-effect .liquidGlass-tint {
+  background: transparent !important; /* Remove dark tint */
+}
+
+.layer-list > liquid-glass-effect .liquidGlass-effect,
+.layer-list > liquid-glass-effect .liquidGlass-tint,
+.layer-list > liquid-glass-effect .liquidGlass-shine {
+  pointer-events: none;
+  border-radius: var(--radius-lg); /* Rounded corners for glass effects */
+}
+
+.layer-list > liquid-glass-effect .liquidGlass-content {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5; /* Below the border */
+  border-radius: var(--radius-lg); /* Rounded corners for content */
+  overflow: hidden; /* Clip content to rounded corners */
+}
+
+/* Remove background from group elements since glass effect handles it */
+.layer-list .layer-group {
+  background: transparent;
+  margin-bottom: 0; /* Remove margin since wrapper handles spacing */
 }
 
 /* Layer List - RTL for Arabic */
@@ -756,9 +1353,9 @@ body {
   align-items: center;
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent; /* Remove background, let glass effect handle it */
+  backdrop-filter: none; /* Remove backdrop filter */
+  border: none; /* Remove border */
   transition: all var(--transition-fast);
   position: relative;
   direction: rtl;
@@ -766,8 +1363,7 @@ body {
 }
 
 .layer-group-header:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05); /* Subtle hover effect */
 }
 
 .group-toggle {
@@ -807,25 +1403,31 @@ body {
 
 .group-name {
   font-weight: 600;
-  color: white !important;
+  color: #fff !important;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   direction: rtl;
   flex: 1;
   text-align: right;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 1 !important; /* Force full opacity */
 }
 
 .group-name i {
-  color: var(--primary-light);
+  color: #fff !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  opacity: 1 !important;
 }
 
 .layer-count {
   font-size: 12px;
-  color: var(--text-light);
+  color: #fff !important;
   font-weight: normal;
   margin-left: var(--spacing-xs);
   margin-right: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 1 !important;
 }
 
 .layer-group-header .layer-checkbox {
@@ -839,10 +1441,10 @@ body {
 
 .layer-group-children {
   margin-right: var(--spacing-lg);
-  margin-left: 0;
+  margin-left: var(--spacing-sm); /* Reduced left margin */
   margin-top: var(--spacing-sm);
   padding-right: var(--spacing-md);
-  padding-left: 0;
+  padding-left: var(--spacing-sm); /* Reduced left padding */
   border-right: 2px solid rgba(66, 165, 245, 0.3);
   border-left: none;
   max-height: 1000px;
@@ -905,16 +1507,20 @@ body {
 .layer-name {
   flex: 1;
   font-weight: 500;
-  color: white !important;
+  color: #fff !important;
   text-align: right;
   margin-right: 0;
   margin-left: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 1 !important;
 }
 
 .child-layer .layer-name {
   font-size: 13px;
   font-weight: 400;
-  color: white !important;
+  color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 1 !important;
 }
 
 .layer-actions {
@@ -928,16 +1534,24 @@ body {
 .layer-actions button {
   background: none;
   border: none;
-  color: var(--text-light);
+  color: #fff !important;
   cursor: pointer;
   padding: var(--spacing-xs);
   border-radius: var(--radius-sm);
   transition: var(--transition-fast);
+  opacity: 1 !important;
+}
+
+.layer-actions button i {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  color: #fff !important;
+  opacity: 1 !important;
 }
 
 .layer-actions button:hover {
   background: rgba(66, 165, 245, 0.2);
-  color: white;
+  color: #fff !important;
+  transform: scale(1.1);
 }
 
 /* Basemap Gallery */
@@ -945,19 +1559,125 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: transparent;
+  position: relative;
+  z-index: 10;
+}
+
+/* Remove dark tint from basemap gallery */
+.panel-section > liquid-glass-effect:has(.basemap-gallery) .liquidGlass-tint {
+  background: transparent !important;
+}
+
+/* Ensure basemap gallery content is visible */
+.panel-section > liquid-glass-effect:has(.basemap-gallery) .liquidGlass-effect,
+.panel-section > liquid-glass-effect:has(.basemap-gallery) .liquidGlass-tint,
+.panel-section > liquid-glass-effect:has(.basemap-gallery) .liquidGlass-shine {
+  pointer-events: none;
+}
+
+.panel-section > liquid-glass-effect:has(.basemap-gallery) .liquidGlass-content {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+}
+
+/* Remove dark tint from drawing tools */
+.panel-section > liquid-glass-effect:has(.drawing-tools) .liquidGlass-tint {
+  background: transparent !important;
+}
+
+/* Ensure drawing tools content is visible */
+.panel-section > liquid-glass-effect:has(.drawing-tools) .liquidGlass-effect,
+.panel-section > liquid-glass-effect:has(.drawing-tools) .liquidGlass-tint,
+.panel-section > liquid-glass-effect:has(.drawing-tools) .liquidGlass-shine {
+  pointer-events: none;
+}
+
+.panel-section > liquid-glass-effect:has(.drawing-tools) .liquidGlass-content {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+  padding: var(--spacing-md);
+}
+
+/* Remove dark tint from analysis grid */
+.panel-section > liquid-glass-effect:has(.analysis-grid) .liquidGlass-tint {
+  background: transparent !important;
+}
+
+/* Ensure analysis grid content is visible */
+.panel-section > liquid-glass-effect:has(.analysis-grid) .liquidGlass-effect,
+.panel-section > liquid-glass-effect:has(.analysis-grid) .liquidGlass-tint,
+.panel-section > liquid-glass-effect:has(.analysis-grid) .liquidGlass-shine {
+  pointer-events: none;
+}
+
+.panel-section > liquid-glass-effect:has(.analysis-grid) .liquidGlass-content {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+  padding: var(--spacing-md);
+}
+
+/* Remove dark tint from classification container */
+.panel-section > liquid-glass-effect:has(.classification-container) .liquidGlass-tint {
+  background: transparent !important;
+}
+
+/* Ensure classification container content is visible */
+.panel-section > liquid-glass-effect:has(.classification-container) .liquidGlass-effect,
+.panel-section > liquid-glass-effect:has(.classification-container) .liquidGlass-tint,
+.panel-section > liquid-glass-effect:has(.classification-container) .liquidGlass-shine {
+  pointer-events: none;
+}
+
+.panel-section > liquid-glass-effect:has(.classification-container) .liquidGlass-content {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+  padding: var(--spacing-md);
+}
+
+/* Remove dark tint from reports config */
+.panel-section > liquid-glass-effect:has(.reports-config) .liquidGlass-tint {
+  background: transparent !important;
+}
+
+/* Ensure reports config content is visible */
+.panel-section > liquid-glass-effect:has(.reports-config) .liquidGlass-effect,
+.panel-section > liquid-glass-effect:has(.reports-config) .liquidGlass-tint,
+.panel-section > liquid-glass-effect:has(.reports-config) .liquidGlass-shine {
+  pointer-events: none;
+}
+
+.panel-section > liquid-glass-effect:has(.reports-config) .liquidGlass-content {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+  padding: var(--spacing-md);
 }
 
 .basemap-item {
   cursor: pointer;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
   position: relative;
   transition: all var(--transition-fast);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .basemap-item:hover {
   transform: scale(1.05);
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
+}
+
+.basemap-item.active {
+  border-color: var(--success-color);
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.5);
 }
 
 .basemap-thumbnail {
@@ -1020,17 +1740,20 @@ body {
   justify-content: center;
   gap: var(--spacing-xs);
   padding: var(--spacing-md);
-  background: rgba(0, 0, 0, 0.75);
-  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-fast);
-  color: white;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .draw-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
   border-color: var(--primary-light);
   color: var(--primary-color);
+  transform: translateY(-2px);
 }
 
 .draw-tool-btn.active {
@@ -1050,9 +1773,11 @@ body {
 
 /* Drawing Settings */
 .drawing-settings {
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
   padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
 .setting-row {
@@ -1071,7 +1796,8 @@ body {
   align-items: center;
   gap: var(--spacing-sm);
   font-weight: 500;
-  color: white;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .color-picker {
@@ -1111,23 +1837,29 @@ body {
 .slider-value {
   min-width: 40px;
   text-align: right;
-  color: white;
+  color: #fff;
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .clear-drawings-btn {
-  color: red;
-  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  background-color: rgba(255, 0, 0, 0.7);
   padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
   border-radius: 0.5em;
-  border: 1px solid red;
+  border: 1px solid rgba(255, 0, 0, 0.8);
   margin-top: 0.75em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all var(--transition-fast);
+  width: 100%;
+  font-weight: 500;
 }
 
 .clear-drawings-btn:hover {
-  background-color: black;
-  border-color: white;
+  background-color: rgba(255, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
 }
 
 /* Analysis Cards */
@@ -1142,17 +1874,19 @@ body {
   flex-direction: column;
   align-items: center;
   padding: var(--spacing-lg);
-  background: rgba(0, 0, 0, 0.75);
-  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-fast);
   text-align: center;
-  color: var(--text-white);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .analysis-card:hover {
-  background: black;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--primary-light);
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
@@ -1164,18 +1898,21 @@ body {
 }
 
 .analysis-card:hover .analysis-icon {
-  color: var(--text-white);
+  color: var(--primary-light);
+  transform: scale(1.1);
 }
 
 .analysis-card h4 {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: var(--spacing-xs);
+  color: #fff;
 }
 
 .analysis-card p {
   font-size: 12px;
-  opacity: 0.8;
+  opacity: 0.9;
+  color: #fff;
 }
 
 /* Visualization Options */
@@ -1266,29 +2003,55 @@ body {
 .form-label {
   display: block;
   font-weight: bold;
-  color: var(--text-primary);
+  color: #fff;
   margin-bottom: var(--spacing-xs);
-  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .input-field,
 .select-input {
   width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
-  background: black;
-  border: 1px solid var(--border-color);
+  padding-right: 35px; /* Add space for dropdown arrow */
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-md);
   font-size: 14px;
-  color: white;
+  color: #fff;
   transition: var(--transition-fast);
   letter-spacing: 0.25px;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center; /* Default: arrow on right for LTR */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* RTL dropdown styling - arrow on left for Arabic */
+.select-input[dir="rtl"],
+[dir="rtl"] .select-input,
+.reports-config .select-input,
+.attribute-table-header .select-input {
+  background-position: left 12px center; /* Arrow on left for RTL */
+  padding-right: var(--spacing-md);
+  padding-left: 35px; /* Space for arrow on left */
 }
 
 .input-field:focus,
 .select-input:focus {
   outline: none;
   border-color: var(--primary-color);
+  background: rgba(0, 0, 0, 0.6);
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.select-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .form-row {
@@ -1320,34 +2083,40 @@ body {
   justify-content: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-lg);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .action-btn.primary {
-  background: rgba(0, 133, 255, 0.6);
-  color: var(--text-white);
+  background: rgba(0, 133, 255, 0.7);
+  color: #fff;
+  border-color: rgba(0, 133, 255, 0.8);
 }
 
 .action-btn.primary:hover {
   background: var(--primary-color);
   border-color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 133, 255, 0.3);
 }
 
 .action-btn.secondary {
-  background: black;
-  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .action-btn.secondary:hover {
-  background: var(--bg-primary);
+  background: rgba(255, 255, 255, 0.12);
   border-color: var(--primary-color);
   color: var(--primary-color);
+  transform: translateY(-1px);
 }
 
 .action-btn.danger {
@@ -1366,14 +2135,54 @@ body {
 }
 
 .icon-btn {
-  background: none;
-  border: none;
-  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff !important;
   cursor: pointer;
   padding: var(--spacing-sm);
   border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
+  transition: all var(--transition-fast);
   font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--primary-color);
+  color: var(--primary-color) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.icon-btn i {
+  color: inherit !important;
+  opacity: 1 !important;
+  font-size: 16px;
+  display: inline-block;
+}
+
+.icon-btn .fa,
+.icon-btn .fas,
+.icon-btn .far,
+.icon-btn .fal,
+.icon-btn .fab {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+.close-table-btn {
+  background: rgba(255, 0, 0, 0.15);
+  border-color: rgba(255, 0, 0, 0.3);
+}
+
+.close-table-btn:hover {
+  background: rgba(255, 0, 0, 0.25);
+  border-color: rgba(255, 0, 0, 0.5);
+  color: #ff4444 !important;
 }
 
 /* Button Groups */
@@ -1626,8 +2435,8 @@ body {
   left: 0;
   right: 0;
   height: 400px;
-  background: rgba(0, 0, 0, 0.25);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  background: transparent;
+  box-shadow: none;
   z-index: 350;
   display: flex;
   flex-direction: column;
@@ -1639,22 +2448,46 @@ body {
   transform: translateY(0);
 }
 
+/* Glass effect wrapper for attribute table */
+.attribute-table-widget > liquid-glass-effect {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow: hidden;
+}
+
+.attribute-table-widget .liquidGlass-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.attribute-table-widget .liquidGlass-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  pointer-events: auto;
+}
+
 .attribute-table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-md);
-  background: black;
-  border-bottom: 2px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   min-height: 2.5rem;
 }
 
 .attribute-table-header i {
-  color: rgba(255, 255, 255, 0.75);
+  color: #fff !important;
+  opacity: 1 !important;
 }
 
 .attribute-table-header i:hover {
-  color: white
+  color: inherit !important;
 }
 
 .table-title {
@@ -1666,12 +2499,13 @@ body {
 .table-title h3 {
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  color: #fff;
   margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .table-title i {
-  color: white;
+  color: #fff;
   font-size: 20px;
 }
 
@@ -1679,12 +2513,18 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  /* flex-wrap: wrap; */
+}
+
+.table-controls .select-input {
+  min-width: 150px;
+  max-width: 200px;
 }
 
 .table-search {
   position: relative;
-  background: black;
-  border: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-md);
   padding: 0 var(--spacing-sm);
   display: flex;
@@ -1693,15 +2533,17 @@ body {
 
 .table-search:focus-within {
   border-color: var(--primary-color);
+  background: rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }
 
 #tableSearchInput {
   outline: none;
+  color: #fff;
 }
 
 .table-search i {
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.7);
   margin-right: var(--spacing-xs);
   pointer-events: none;
   /* Prevents icon from interfering with focus */
@@ -1714,6 +2556,7 @@ body {
   padding: var(--spacing-sm);
   font-size: 14px;
   width: 200px;
+  color: #fff;
 }
 
 .attribute-table-content {
@@ -1721,6 +2564,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 #tableContainer {
@@ -1740,17 +2584,18 @@ body {
   top: 0;
   z-index: 10;
   background: rgba(0, 0, 0, 0.75);
-  color: white;
+  color: #fff;
   font-weight: 600;
   padding: var(--spacing-sm) var(--spacing-md);
   text-align: left;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .attribute-data-table th:hover {
-  background: black;
+  background: rgba(0, 0, 0, 0.85);
 }
 
 .attribute-data-table th.sort-asc::after {
@@ -1765,18 +2610,44 @@ body {
 
 .attribute-data-table td {
   padding: var(--spacing-sm) var(--spacing-md);
-  border-bottom: 1px solid var(--border-color);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
   white-space: nowrap;
 }
 
 .attribute-data-table tbody tr:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .attribute-data-table tr.selected {
-  background: rgba(25, 118, 210, 0.1);
+  background: rgba(25, 118, 210, 0.2);
+}
+
+/* Table Empty State */
+.table-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  min-height: 200px;
+  color: #fff;
+  text-align: center;
+}
+
+.table-empty-state i {
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: var(--spacing-md);
+}
+
+.table-empty-state p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Table Pagination */
@@ -1785,13 +2656,18 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-md);
-  background: black;
-  border-top: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .pagination-info {
-  color: white;
+  color: #fff !important;
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.pagination-info span {
+  color: #fff !important;
 }
 
 .pagination-controls {
@@ -1801,29 +2677,31 @@ body {
 }
 
 .pagination-btn {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
   cursor: pointer;
-  color: var(--text-primary);
+  color: #fff;
   transition: var(--transition-fast);
 }
 
 .pagination-btn:hover:not(:disabled) {
   background: var(--primary-color);
-  color: var(--text-white);
+  color: #fff;
   border-color: var(--primary-color);
+  transform: translateY(-1px);
 }
 
 .pagination-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .page-info {
   font-weight: 500;
-  color: white;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Modals */
@@ -3519,9 +4397,8 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   display: flex;
   align-items: center;
   padding: 0;
-}
-    justify-content: center;
-    gap: 2em;
+  justify-content: center;
+  gap: 2em;
 }
 
 .top-toolbar .toolbar-label {
@@ -3911,21 +4788,25 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
    ======================================== */
 
 .reports-config {
-  padding: var(--spacing-md);
+  padding: 0; /* Remove padding as glass effect wrapper has padding */
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .report-info {
   margin-top: var(--spacing-lg);
   padding: var(--spacing-md);
-  background: rgba(33, 150, 243, 0.1);
-  border-left: 3px solid var(--primary-color);
+  background: rgba(33, 150, 243, 0.15);
+  border-right: 3px solid var(--primary-color); /* Changed from border-left to border-right */
   border-radius: var(--radius-md);
+  direction: rtl; /* Ensure RTL direction */
 }
 
 .report-info p {
   margin-bottom: var(--spacing-sm);
-  color: var(--text-primary);
+  color: #fff;
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .report-info ul {
@@ -3936,8 +4817,10 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 
 .report-info li {
   padding: var(--spacing-xs) 0;
-  color: var(--text-secondary);
+  color: #fff;
   padding-right: var(--spacing-md);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .report-info li:before {
@@ -3980,20 +4863,26 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   margin-bottom: var(--spacing-xl);
   padding-bottom: var(--spacing-lg);
   border-bottom: 2px solid var(--primary-color);
+  direction: rtl;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .report-header h2 {
   font-size: 28px;
-  color: var(--primary-color);
+  color: #fff;
   margin-bottom: var(--spacing-sm);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .report-meta {
   display: flex;
   justify-content: center;
   gap: var(--spacing-lg);
-  color: var(--text-secondary);
+  color: #fff;
   font-size: 14px;
+  direction: rtl;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .report-meta span {
@@ -4005,15 +4894,19 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 /* Summary Section */
 .report-summary {
   margin-bottom: var(--spacing-xl);
+  direction: rtl;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .report-summary h3 {
-  font-size: 20px;
-  color: var(--text-primary);
+  font-size: 22px;
+  color: #fff;
   margin-bottom: var(--spacing-md);
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .summary-grid {
@@ -4023,63 +4916,103 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 }
 
 .summary-card {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.9), rgba(25, 118, 210, 0.9));
   color: white;
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   text-align: center;
-  box-shadow: var(--shadow-md);
-  transition: transform var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all var(--transition-fast);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .summary-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
 }
 
 .summary-icon {
-  font-size: 32px;
+  font-size: 36px;
   margin-bottom: var(--spacing-sm);
-  opacity: 0.9;
+  opacity: 0.95;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .summary-value {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
   margin-bottom: var(--spacing-xs);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .summary-label {
   font-size: 14px;
-  opacity: 0.9;
+  opacity: 0.95;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* Charts Section */
 .report-charts {
   margin-bottom: var(--spacing-xl);
+  direction: rtl;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .report-charts h3 {
-  font-size: 20px;
-  color: var(--text-primary);
+  font-size: 22px;
+  color: #fff;
   margin-bottom: var(--spacing-md);
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3 columns for 6 charts */
   gap: var(--spacing-lg);
 }
 
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr; /* 1 column on small screens */
+  }
+}
+
 .chart-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.05);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
+}
+
+.chart-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.chart-container h4 {
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .chart-container canvas {
@@ -4089,51 +5022,98 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 /* Layer Sections */
 .report-layers {
   margin-top: var(--spacing-xl);
+  direction: rtl;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.report-layers > h3 {
+  font-size: 22px;
+  color: #fff;
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .layer-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.05);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: var(--spacing-lg);
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
 }
 
-.layer-section h3 {
+.layer-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.layer-section h4 {
   font-size: 18px;
   color: var(--primary-color);
   margin-bottom: var(--spacing-md);
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .layer-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(2, 1fr); /* 2 columns for better layout */
+  gap: var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
-  padding: var(--spacing-md);
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(25, 118, 210, 0.1));
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--transition-fast);
+}
+
+.info-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .info-label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.info-label i {
+  color: var(--primary-light);
+  font-size: 14px;
 }
 
 .info-value {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
-  color: var(--text-primary);
+  color: #fff;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Field Statistics */
@@ -4225,6 +5205,12 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: rgb(255 255 255 / 10%) !important;
+  position: relative;
+  z-index: 10;
+  direction: rtl;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .section-header {
@@ -4233,28 +5219,31 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   align-items: center;
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .section-header h4 {
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #fff;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .section-header h4 i {
-  color: var(--primary-color);
+  color: var(--primary-light);
 }
 
 /* Query Builder */
 .query-builder-section {
-  background: var(--surface-color);
-  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .query-builder-container {
@@ -4267,18 +5256,22 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   align-items: center;
   justify-content: center;
   padding: var(--spacing-xl);
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   text-align: center;
 }
 
 .empty-query-state i {
   font-size: 48px;
   margin-bottom: var(--spacing-md);
-  opacity: 0.3;
+  opacity: 0.5;
+  color: var(--primary-light);
 }
 
 .empty-query-state p {
   font-size: 14px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* Criteria List */
@@ -4289,16 +5282,18 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 }
 
 .criteria-row {
-  background: white;
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
   padding: var(--spacing-md);
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .criteria-row:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  transform: translateY(-2px);
 }
 
 /* Logical Operator Buttons */
@@ -4307,36 +5302,40 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-md);
-  border-bottom: 1px dashed var(--border-color);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
 .logic-btn {
   flex: 1;
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 2px solid var(--border-color);
-  background: white;
-  border-radius: var(--border-radius);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .logic-btn:hover {
-  border-color: var(--primary-color);
-  color: var(--primary-color);
-  background: rgba(33, 150, 243, 0.05);
+  border-color: var(--primary-light);
+  color: #fff;
+  background: rgba(33, 150, 243, 0.2);
+  transform: scale(1.02);
 }
 
 .logic-btn.active {
   background: var(--primary-color);
   border-color: var(--primary-color);
   color: white;
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
 }
 
 .logic-btn i {
@@ -4365,11 +5364,13 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 .criteria-value {
   width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
   font-size: 14px;
-  background: white;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
   transition: all 0.3s ease;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .criteria-field:focus,
@@ -4377,15 +5378,16 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 .criteria-value:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .remove-criteria-btn {
   padding: var(--spacing-sm);
-  background: #f44336;
+  background: rgba(244, 67, 54, 0.9);
   color: white;
   border: none;
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
@@ -4396,11 +5398,14 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   flex-shrink: 0;
   font-weight: 600;
   gap: var(--spacing-xs);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .remove-criteria-btn:hover {
-  background: #d32f2f;
+  background: rgba(211, 47, 47, 1);
   transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.4);
 }
 
 /* Search Actions */
@@ -4418,20 +5423,29 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 
 /* Search Tips */
 .search-tips {
-  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-  border-radius: var(--border-radius);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(25, 118, 210, 0.15));
+  border-radius: var(--radius-lg);
   padding: var(--spacing-md);
-  border-left: 4px solid var(--primary-color);
+  border-right: 4px solid var(--primary-color);
+  border-left: none;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .search-tips h5 {
   font-size: 14px;
   font-weight: 600;
-  color: var(--primary-dark);
+  color: #fff;
   margin-bottom: var(--spacing-sm);
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.search-tips h5 i {
+  color: var(--primary-light);
 }
 
 .search-tips ul {
@@ -4442,216 +5456,310 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 
 .search-tips li {
   font-size: 13px;
-  color: var(--text-primary);
+  color: #fff;
   padding: var(--spacing-xs) 0;
-  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
   position: relative;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .search-tips li::before {
   content: "•";
   position: absolute;
-  left: 0;
-  color: var(--primary-color);
+  right: 0;
+  color: var(--primary-light);
   font-weight: bold;
 }
 
 /* Search Results Modal */
+.search-results-modal {
+  z-index: 1000 !important;
+}
+
+.search-results-modal .modal-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
 .search-results-modal .modal-content {
-  max-width: 1400px;
-  width: 95%;
-  max-height: 90vh;
+  max-width: 1400px !important;
+  width: 95% !important;
+  max-height: calc(90vh - 100px) !important; /* Reduced to avoid toolbar overlap */
+  margin-bottom: 100px !important; /* Add margin to avoid bottom toolbar */
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.search-results-modal .modal-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: var(--spacing-lg) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  direction: rtl !important;
+}
+
+.search-results-modal .modal-header h3 {
+  color: #fff !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  flex: 1 !important;
+  text-align: center !important;
+}
+
+.modal-header-left {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.back-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-xs) !important;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  border-radius: var(--radius-md) !important;
+  cursor: pointer !important;
+  transition: all var(--transition-fast) !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateX(4px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
 .search-results-body {
-  max-height: calc(90vh - 80px);
-  overflow-y: auto;
+  max-height: calc(90vh - 180px) !important; /* Adjusted for header and bottom margin */
+  overflow-y: auto !important;
+  padding: var(--spacing-lg) !important;
+  direction: rtl !important;
+  background: transparent !important;
 }
 
 /* Results Header */
 .results-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-  border-bottom: 2px solid var(--border-color);
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: var(--spacing-xl) !important;
+  padding-bottom: var(--spacing-lg) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+  flex-wrap: wrap !important;
+  gap: var(--spacing-md) !important;
+  direction: rtl !important;
 }
 
 .results-stats {
-  display: flex;
-  gap: var(--spacing-md);
-  flex-wrap: wrap;
+  display: flex !important;
+  gap: var(--spacing-md) !important;
+  flex-wrap: wrap !important;
 }
 
 .stat-card {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-  color: white;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--border-radius);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  box-shadow: var(--shadow-md);
-  min-width: 150px;
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.9), rgba(25, 118, 210, 0.9)) !important;
+  color: white !important;
+  padding: var(--spacing-md) var(--spacing-lg) !important;
+  border-radius: var(--radius-lg) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-md) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  min-width: 150px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4) !important;
 }
 
 .stat-card i {
-  font-size: 32px;
-  opacity: 0.9;
+  font-size: 32px !important;
+  opacity: 0.95 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
 }
 
 .stat-content {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .stat-value {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 .stat-label {
-  font-size: 12px;
-  opacity: 0.9;
-  margin-top: 4px;
+  font-size: 12px !important;
+  opacity: 0.95 !important;
+  margin-top: 4px !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 .results-actions {
-  display: flex;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
+  display: flex !important;
+  gap: var(--spacing-sm) !important;
+  flex-wrap: wrap !important;
 }
 
 /* Results by Layer */
 .results-by-layer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-lg) !important;
 }
 
 .layer-results-section {
-  background: var(--surface-color);
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  overflow: hidden;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.layer-results-section:hover {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
 .layer-results-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
-  cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: var(--spacing-md) var(--spacing-lg) !important;
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(25, 118, 210, 0.15)) !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  direction: rtl !important;
 }
 
 .layer-results-header:hover {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.3), rgba(25, 118, 210, 0.25)) !important;
 }
 
 .layer-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-md) !important;
 }
 
 .layer-info i {
-  font-size: 20px;
-  color: var(--primary-color);
+  font-size: 20px !important;
+  color: var(--primary-light) !important;
 }
 
 .layer-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 .result-count {
-  background: var(--primary-color);
-  color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
+  background: var(--primary-color) !important;
+  color: white !important;
+  padding: 4px 12px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 .toggle-icon {
-  color: var(--text-secondary);
-  transition: transform 0.3s ease;
+  color: rgba(255, 255, 255, 0.7) !important;
+  transition: transform 0.3s ease !important;
 }
 
 .layer-results-section.collapsed .toggle-icon {
-  transform: rotate(-90deg);
+  transform: rotate(-90deg) !important;
 }
 
 .layer-results-content {
-  padding: var(--spacing-lg);
-  max-height: 600px;
-  overflow-y: auto;
-  transition: all 0.3s ease;
+  padding: var(--spacing-lg) !important;
+  max-height: 600px !important;
+  overflow-y: auto !important;
+  transition: all 0.3s ease !important;
+  background: rgba(0, 0, 0, 0.2) !important;
 }
 
 .layer-results-content.collapsed {
-  max-height: 0;
-  padding: 0;
-  overflow: hidden;
+  max-height: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Results Grid */
 .results-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--spacing-md);
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap: var(--spacing-md) !important;
 }
 
 /* Feature Card */
 .feature-card {
-  background: white;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  backdrop-filter: blur(10px) !important;
+  direction: rtl !important;
 }
 
 .feature-card:hover {
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  border-color: var(--primary-light) !important;
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.3) !important;
+  transform: translateY(-4px) !important;
 }
 
 .feature-card-header {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-  color: white;
-  padding: var(--spacing-sm) var(--spacing-md);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-weight: 600;
-  font-size: 14px;
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.9), rgba(25, 118, 210, 0.9)) !important;
+  color: white !important;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-sm) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 .feature-card-body {
-  padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
+  padding: var(--spacing-md) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-xs) !important;
 }
 
 .feature-field {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
-  font-size: 13px;
-  padding: var(--spacing-xs) 0;
-  border-bottom: 1px solid #f5f5f5;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: var(--spacing-sm) !important;
+  font-size: 13px !important;
+  padding: var(--spacing-xs) 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 .feature-field:last-child {
@@ -4660,13 +5768,17 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 
 .field-label {
   font-weight: 600;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   flex-shrink: 0;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .field-value {
-  color: var(--text-primary);
-  text-align: right;
+  color: #fff;
+  text-align: left;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
   word-break: break-word;
 }
 
@@ -4704,23 +5816,28 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   justify-content: center;
   padding: var(--spacing-xxl);
   text-align: center;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .no-results i {
   font-size: 64px;
   margin-bottom: var(--spacing-lg);
-  opacity: 0.3;
+  opacity: 0.5;
+  color: var(--primary-light);
 }
 
 .no-results h3 {
   font-size: 20px;
-  color: var(--text-primary);
+  color: #fff;
   margin-bottom: var(--spacing-sm);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .no-results p {
   font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .more-results-notice {
@@ -4810,236 +5927,282 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
    ============================================================================ */
 
 /* Results Panel Container */
+/* Search Results Panel - Glass Effect Styling - v2024.12.30.002 */
 .search-results-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: var(--spacing-md);
+  display: flex !important;
+  flex-direction: column !important;
+  height: 87% !important;
+  gap: var(--spacing-md) !important;
+  direction: rtl !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Liquid glass wrapper for results panel elements */
+.search-results-panel liquid-glass-effect {
+  margin-bottom: var(--spacing-md) !important;
+}
+
+.search-results-panel .liquidGlass-wrapper {
+  border-radius: 1rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Add background to liquidGlass-content in search results - v2024.12.30.006 */
+.search-results-panel .liquidGlass-content {
+  background-color: rgba(0, 0, 0, 0.10) !important;
 }
 
 /* Results Panel Header */
 .results-panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md);
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-  border-radius: var(--border-radius);
-  border-left: 4px solid var(--primary-color);
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: var(--spacing-md) !important;
+  background: transparent !important;
+  border-radius: var(--radius-lg) !important;
+  border: none !important;
 }
 
 .results-stats-compact {
-  display: flex;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
+  display: flex !important;
+  gap: var(--spacing-sm) !important;
+  flex-wrap: wrap !important;
 }
 
 .stat-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  background: white;
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-xs) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  padding: var(--spacing-xs) var(--spacing-md) !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 .stat-badge i {
-  color: var(--primary-color);
-  font-size: 14px;
+  color: var(--primary-light) !important;
+  font-size: 14px !important;
 }
 
 .results-panel-actions {
-  display: flex;
-  gap: var(--spacing-xs);
-}
-
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: white;
-  color: var(--text-primary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.icon-btn:hover {
-  background: var(--primary-color);
-  color: white;
-  transform: scale(1.1);
+  display: flex !important;
+  gap: var(--spacing-xs) !important;
 }
 
 /* Results Search Box */
 .results-search-box {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: white;
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-sm) var(--spacing-md);
-  transition: all 0.3s ease;
+  gap: 7px !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  transition: all 0.3s ease !important;
 }
 
 .results-search-box:focus-within {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  border-color: transparent !important;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3) !important;
+  background: transparent !important;
 }
 
 .results-search-box i {
-  color: var(--text-secondary);
-  margin-left: var(--spacing-sm);
+  color: rgba(255, 255, 255, 0.7) !important;
+  margin-right: var(--spacing-sm) !important;
+  margin-left: 0 !important;
 }
 
 .results-search-input {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  background: transparent;
+  flex: 1 !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 14px !important;
+  background: transparent !important;
+  color: #fff !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+.results-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Results List */
 .results-list {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  padding-right: var(--spacing-xs);
+  flex: 1 !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-md) !important;
+  padding-left: var(--spacing-xs) !important;
+  padding-right: 0 !important;
 }
 
-/* Result Card */
-.result-card {
-  background: white;
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
-  /* overflow: hidden; */
-  transition: all 0.3s ease;
-  cursor: pointer;
+/* Result Card Liquid Glass Wrapper */
+.results-list liquid-glass-effect {
+  margin-bottom: 0 !important;
 }
 
-.result-card:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
-  transform: translateX(-4px);
+.results-list .liquidGlass-wrapper {
+  border-radius: 1rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.results-list .liquidGlass-wrapper:hover {
+  border-color: rgba(33, 150, 243, 0.5) !important;
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.3) !important;
+  transform: translateX(4px) !important;
+}
+
+/* Result Card - More specific selector */
+.search-results-panel .result-card,
+.results-list .result-card {
+  background: transparent !important;
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: visible !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  margin-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+.search-results-panel .result-card:hover,
+.results-list .result-card:hover {
+  /* Hover effects now on liquidGlass-wrapper */
 }
 
 .result-card-header {
-  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
-  padding: var(--spacing-sm) var(--spacing-md);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(25, 118, 210, 0.1)) !important;
+  padding: var(--spacing-md) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  min-height: 48px !important;
+  border-radius: 1rem 1rem 0 0 !important;
 }
 
 .result-card-title {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  flex: 1;
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-sm) !important;
+  flex: 1 !important;
 }
 
 .result-card-title i {
-  color: var(--primary-color);
-  font-size: 14px;
+  color: var(--primary-light) !important;
+  font-size: 16px !important; /* Increased */
 }
 
 .result-layer-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 14px !important; /* Increased */
+  font-weight: 600 !important;
+  color: #fff !important;
+  white-space: normal !important; /* Allow wrapping */
+  overflow: visible !important;
+  text-overflow: clip !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  line-height: 1.4 !important;
 }
 
 .result-number {
-  background: var(--primary-color);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  flex-shrink: 0;
+  background: var(--primary-color) !important;
+  color: white !important;
+  padding: 4px 10px !important; /* Increased */
+  border-radius: 12px !important;
+  font-size: 12px !important; /* Increased */
+  font-weight: 600 !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  min-width: 32px !important;
+  text-align: center !important;
 }
 
 .result-card-body {
-  padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
+  padding: var(--spacing-lg) !important; /* Increased */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-sm) !important; /* Increased */
 }
 
 .result-field {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
-  font-size: 12px;
-  padding: var(--spacing-xs) 0;
-  border-bottom: 1px solid #f5f5f5;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: var(--spacing-md) !important; /* Increased */
+  font-size: 13px !important; /* Increased */
+  padding: var(--spacing-sm) 0 !important; /* Increased */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  line-height: 1.5 !important;
 }
 
 .result-field:last-child {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 
 .result-field-label {
-  font-weight: 600;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-  max-width: 40%;
-  word-break: break-word;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 1) !important;
+  flex-shrink: 0 !important;
+  max-width: 45% !important; /* Increased */
+  word-break: break-word !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
 }
 
 .result-field-value {
-  color: var(--text-primary);
-  text-align: left;
-  word-break: break-word;
-  flex: 1;
+  color: #fff !important;
+  text-align: left !important;
+  word-break: break-word !important;
+  flex: 1 !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
 }
 
 .result-card-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--border-color);
-  border-top: 1px solid var(--border-color);
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  min-height: 44px !important;
 }
 
 .result-action-btn {
-  padding: var(--spacing-sm);
-  background: white;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 12px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-xs);
+  padding: var(--spacing-md) !important; /* Increased */
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: none !important;
+  font-size: 13px !important; /* Increased */
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--spacing-xs) !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  transition: all var(--transition-fast) !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  min-height: 44px !important;
 }
 
 .result-action-btn:hover {
-  background: var(--primary-color);
-  color: white;
+  background: rgba(33, 150, 243, 0.3) !important;
+  color: white !important;
 }
 
 .result-action-btn i {
-  font-size: 14px;
+  font-size: 15px !important; /* Increased */
 }
 
 /* Feature Details Panel */
@@ -5177,77 +6340,89 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 
 /* Results Pagination */
 .results-pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md);
-  background: white;
-  border-top: 2px solid var(--border-color);
-  gap: var(--spacing-sm);
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: var(--spacing-md) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.1) !important;
+  gap: var(--spacing-sm) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: var(--radius-md) !important;
+  direction: rtl !important;
 }
 
 .pagination-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  font-size: 14px;
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-xs) !important;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  background: rgba(33, 150, 243, 0.8) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: var(--radius-md) !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+  background: rgba(25, 118, 210, 1) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4) !important;
 }
 
 .pagination-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  opacity: 0.6;
+  background: rgba(255, 255, 255, 0.1) !important;
+  cursor: not-allowed !important;
+  opacity: 0.4 !important;
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .pagination-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: var(--text-primary);
-  font-weight: 600;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 13px !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 .page-range {
-  font-size: 11px;
-  color: var(--text-secondary);
-  font-weight: normal;
+  font-size: 11px !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: normal !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 .no-results-found {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-xxl);
-  text-align: center;
-  color: var(--text-secondary);
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: var(--spacing-xxl) !important;
+  text-align: center !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .no-results-found i {
-  font-size: 48px;
-  margin-bottom: var(--spacing-md);
-  opacity: 0.3;
+  font-size: 48px !important;
+  margin-bottom: var(--spacing-md) !important;
+  opacity: 0.5 !important;
+  color: var(--primary-light) !important;
 }
 
 .no-results-found p {
-  font-size: 14px;
-  color: var(--text-primary);
+  font-size: 14px !important;
+  color: #fff !important;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Responsive Pagination */

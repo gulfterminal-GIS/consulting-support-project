@@ -21,6 +21,7 @@
     backdrop-filter: blur(4px);
     filter: url(#glass-distortion); /* SVG filter for distortion effect, embedded in HTML */
     overflow: hidden;
+    pointer-events: none; /* Don't block clicks */
 }
 
 .liquidGlass-tint {
@@ -28,6 +29,7 @@
     z-index: 1;
     inset: 0;
     background: rgba(36, 36, 36, 0.2);
+    pointer-events: none; /* Don't block clicks */
 }
 
 .liquidGlass-shine {
@@ -37,9 +39,41 @@
     overflow: hidden;
     box-shadow: inset 1px 1px 1px 0 rgba(255, 255, 255, 0.5),
         inset 0 0 1px 1px rgba(255, 255, 255, 0.5);
+    pointer-events: none; /* Don't block clicks */
 }
 
 .liquidGlass-content {
     z-index: 3;
     width: 100%;
+    pointer-events: auto; /* Allow clicks on content */
+}
+
+/* Remove dark tint from drawing panel glass effect */
+.side-panel.drawing-panel .liquidGlass-tint {
+    background: transparent !important;
+}
+
+/* Remove dark tint from analysis panel glass effect */
+.side-panel.analysis-panel .liquidGlass-tint {
+    background: transparent !important;
+}
+
+/* Remove dark tint from classification panel glass effect */
+.side-panel.classification-panel .liquidGlass-tint {
+    background: transparent !important;
+}
+
+/* Remove dark tint from attribute table glass effect */
+.attribute-table-widget .liquidGlass-tint {
+    background: transparent !important;
+}
+
+/* Remove dark tint from reports panel glass effect */
+.side-panel.reports-panel .liquidGlass-tint {
+    background: transparent !important;
+}
+
+/* Remove dark tint from search results panel glass effect - v2024.12.30.001 */
+.search-results-panel .liquidGlass-tint {
+    background: transparent !important;
 }
