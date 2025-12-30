@@ -43,12 +43,20 @@ export class ToolbarManager {
    * Initialize desktop toolbar buttons
    */
   initializeDesktopToolbar() {
-    // Upload button
+    // Upload button - with toggle functionality
     const uploadBtn = document.getElementById("uploadBtn");
     if (uploadBtn) {
       uploadBtn.addEventListener("click", () => {
-        uploadBtn.classList.toggle("active");
-        this.panelManager.openSidePanel("Upload Files", "uploadPanelTemplate");
+        const panel = document.getElementById("sidePanel");
+        const isUploadPanelOpen = panel.classList.contains("active") && panel.classList.contains("upload-panel");
+        
+        if (isUploadPanelOpen) {
+          // If upload panel is already open, close it
+          this.panelManager.closeSidePanel();
+        } else {
+          // Otherwise, open the upload panel
+          this.panelManager.openSidePanel("Upload Files", "uploadPanelTemplate");
+        }
       });
     }
 
@@ -69,21 +77,37 @@ export class ToolbarManager {
       });
     }
 
-    // Basemap button
+    // Basemap button - with toggle functionality
     const basemapBtn = document.getElementById("basemapBtn");
     if (basemapBtn) {
       basemapBtn.addEventListener("click", () => {
-        basemapBtn.classList.toggle("active");
-        this.panelManager.openSidePanel("Basemap", "basemapPanelTemplate");
+        const panel = document.getElementById("sidePanel");
+        const isBasemapPanelOpen = panel.classList.contains("active") && panel.classList.contains("basemap-panel");
+        
+        if (isBasemapPanelOpen) {
+          // If basemap panel is already open, close it
+          this.panelManager.closeSidePanel();
+        } else {
+          // Otherwise, open the basemap panel
+          this.panelManager.openSidePanel("Basemap", "basemapPanelTemplate");
+        }
       });
     }
 
-    // Analysis button
+    // Analysis button - with toggle functionality
     const analysisBtn = document.getElementById("analysisBtn");
     if (analysisBtn) {
       analysisBtn.addEventListener("click", () => {
-        analysisBtn.classList.toggle("active");
-        this.panelManager.openSidePanel("Spatial Analysis", "analysisPanelTemplate");
+        const panel = document.getElementById("sidePanel");
+        const isAnalysisPanelOpen = panel.classList.contains("active") && panel.classList.contains("analysis-panel");
+        
+        if (isAnalysisPanelOpen) {
+          // If analysis panel is already open, close it
+          this.panelManager.closeSidePanel();
+        } else {
+          // Otherwise, open the analysis panel
+          this.panelManager.openSidePanel("Spatial Analysis", "analysisPanelTemplate");
+        }
       });
     }
 
@@ -96,12 +120,20 @@ export class ToolbarManager {
       });
     }
 
-    // Classification button
+    // Classification button - with toggle functionality
     const classificationBtn = document.getElementById("classificationBtn");
     if (classificationBtn) {
       classificationBtn.addEventListener("click", () => {
-        classificationBtn.classList.toggle("active");
-        this.panelManager.openSidePanel("Classification", "classificationPanelTemplate");
+        const panel = document.getElementById("sidePanel");
+        const isClassificationPanelOpen = panel.classList.contains("active") && panel.classList.contains("classification-panel");
+        
+        if (isClassificationPanelOpen) {
+          // If classification panel is already open, close it
+          this.panelManager.closeSidePanel();
+        } else {
+          // Otherwise, open the classification panel
+          this.panelManager.openSidePanel("Classification", "classificationPanelTemplate");
+        }
       });
     }
 
@@ -123,12 +155,20 @@ export class ToolbarManager {
       });
     }
 
-    // Reports button
+    // Reports button - with toggle functionality
     const reportsBtn = document.getElementById("reportsBtn");
     if (reportsBtn) {
       reportsBtn.addEventListener("click", () => {
-        reportsBtn.classList.toggle("active");
-        this.panelManager.openSidePanel("التقارير", "reportsPanelTemplate");
+        const panel = document.getElementById("sidePanel");
+        const isReportsPanelOpen = panel.classList.contains("active") && panel.classList.contains("reports-panel");
+        
+        if (isReportsPanelOpen) {
+          // If reports panel is already open, close it
+          this.panelManager.closeSidePanel();
+        } else {
+          // Otherwise, open the reports panel
+          this.panelManager.openSidePanel("التقارير", "reportsPanelTemplate");
+        }
       });
     }
 
@@ -136,8 +176,17 @@ export class ToolbarManager {
     const advancedSearchBtn = document.getElementById("advancedSearchBtn");
     if (advancedSearchBtn) {
       advancedSearchBtn.addEventListener("click", () => {
-        advancedSearchBtn.classList.toggle("active");
-        this.panelManager.openSidePanel("بحث متقدم", "advancedSearchPanelTemplate");
+        const panel = document.getElementById("sidePanel");
+        const isOpen = panel.classList.contains("active") && panel.classList.contains("advanced-search-panel");
+        
+        if (isOpen) {
+          // Close if already open
+          this.panelManager.closeSidePanel();
+        } else {
+          // Open if closed
+          advancedSearchBtn.classList.toggle("active");
+          this.panelManager.openSidePanel("بحث متقدم", "advancedSearchPanelTemplate");
+        }
       });
     }
   }
@@ -268,8 +317,12 @@ export class ToolbarManager {
       return;
     }
 
-    if (btn.classList.contains("active")) {
-      // Deactivate draw
+    // Check if drawing panel is already open
+    const panel = document.getElementById("sidePanel");
+    const isDrawingPanelOpen = panel.classList.contains("active") && panel.classList.contains("drawing-panel");
+    
+    if (isDrawingPanelOpen) {
+      // If drawing panel is already open, close it
       btn.classList.remove("active");
       this.panelManager.closeSidePanel();
       this.drawingManager.stopDrawing();

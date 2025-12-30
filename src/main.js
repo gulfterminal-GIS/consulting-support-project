@@ -378,6 +378,102 @@ async function initializeApplication() {
 // ============================================================================
 // PHASE 9: START APPLICATION
 // ============================================================================
-// Start the application initialization process
+// Wait for login before starting the application initialization process
 
-initializeApplication();
+// Check if user needs to login first
+const loadingScreen = document.getElementById("loadingScreen");
+const loginForm = document.getElementById("loginForm");
+
+if (loadingScreen && loginForm) {
+  console.log("🔐 Waiting for user login...");
+  
+  // Setup login handler
+  setupLoginHandler();
+} else {
+  // No login screen, start immediately
+  initializeApplication();
+}
+
+/**
+ * Setup login handler
+ */
+function setupLoginHandler() {
+  const loginForm = document.getElementById("loginForm");
+  const loginError = document.getElementById("loginError");
+  const loginBox = document.getElementById("loginBox");
+  const loginLoading = document.getElementById("loginLoading");
+  const loginBtn = document.getElementById("loginBtn");
+  const loadingScreen = document.getElementById("loadingScreen");
+
+  if (!loginForm) {
+    console.warn("Login form not found, starting app immediately");
+    initializeApplication();
+    return;
+  }
+
+  let isLoggingIn = false;
+
+  // Handle login form submission
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    // Prevent multiple submissions
+    if (isLoggingIn) {
+      return;
+    }
+    
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    
+    // Static credentials check
+    if (username === "123456" && password === "123456") {
+      // Successful login
+      isLoggingIn = true;
+      loginError.style.display = "none";
+      
+      // Disable button and show loading state
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '<div class="spinner"></div><span>جاري التحميل...</span>';
+      
+      // Switch to loading view
+      setTimeout(() => {
+        loginBox.style.display = "none";
+        loginLoading.classList.add("active");
+        
+        console.log("✅ Login successful! Initializing application...");
+        
+        // Start application initialization
+        initializeApplication().then(() => {
+          // Hide login screen after map is fully loaded
+          setTimeout(() => {
+            loadingScreen.classList.add("fade-out");
+            console.log("✅ Login screen hidden, application ready");
+          }, 1000);
+        }).catch((error) => {
+          console.error("❌ Application initialization failed:", error);
+          // Show error and allow retry
+          loginBox.style.display = "block";
+          loginLoading.classList.remove("active");
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>دخول</span>';
+          loginError.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>فشل تحميل التطبيق، يرجى المحاولة مرة أخرى</span>';
+          loginError.style.display = "flex";
+          isLoggingIn = false;
+        });
+      }, 500);
+      
+    } else {
+      // Failed login
+      loginError.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>اسم المستخدم أو كلمة المرور غير صحيحة</span>';
+      loginError.style.display = "flex";
+      
+      // Shake animation
+      loginError.style.animation = "none";
+      setTimeout(() => {
+        loginError.style.animation = "shake 0.5s ease";
+      }, 10);
+      
+      console.log("❌ Login failed!");
+    }
+  });
+}

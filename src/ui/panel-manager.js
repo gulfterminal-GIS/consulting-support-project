@@ -65,11 +65,25 @@ export class PanelManager {
       panelTitle.textContent = title;
       panelContent.innerHTML = template.innerHTML;
       
-      // Add/remove layers-panel class based on which panel is opening
+      // Add/remove special panel classes based on which panel is opening
+      panel.classList.remove("layers-panel", "upload-panel", "basemap-panel", "drawing-panel", "analysis-panel", "classification-panel", "reports-panel", "advanced-search-panel"); // Remove all special classes first
+      
       if (templateId === "layersPanelTemplate") {
         panel.classList.add("layers-panel");
-      } else {
-        panel.classList.remove("layers-panel");
+      } else if (templateId === "uploadPanelTemplate") {
+        panel.classList.add("upload-panel");
+      } else if (templateId === "basemapPanelTemplate") {
+        panel.classList.add("basemap-panel");
+      } else if (templateId === "drawingPanelTemplate") {
+        panel.classList.add("drawing-panel");
+      } else if (templateId === "analysisPanelTemplate") {
+        panel.classList.add("analysis-panel");
+      } else if (templateId === "classificationPanelTemplate") {
+        panel.classList.add("classification-panel");
+      } else if (templateId === "reportsPanelTemplate") {
+        panel.classList.add("reports-panel");
+      } else if (templateId === "advancedSearchPanelTemplate") {
+        panel.classList.add("advanced-search-panel");
       }
       
       panel.classList.add("active");
@@ -134,13 +148,13 @@ export class PanelManager {
   closeSidePanel() {
     const panel = document.getElementById("sidePanel");
     
-    // Wait for transition to complete before removing layers-panel class
+    // Wait for transition to complete before removing special panel classes
     // This prevents the background from showing during the close animation
     panel.classList.remove("active");
     
-    // Remove layers-panel class after transition completes (300ms)
+    // Remove special panel classes after transition completes (300ms)
     setTimeout(() => {
-      panel.classList.remove("layers-panel");
+      panel.classList.remove("layers-panel", "upload-panel", "basemap-panel", "drawing-panel", "analysis-panel", "classification-panel", "reports-panel");
     }, 300);
 
     // Clean up any active states

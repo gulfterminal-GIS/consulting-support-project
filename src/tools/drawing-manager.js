@@ -445,10 +445,15 @@ export class DrawingManager {
 
     this.resetDrawingTools();
 
-    // Force graphics layer refresh
+    // Force view to redraw (GraphicsLayer doesn't have refresh method)
     const drawLayer = this.stateManager.getDrawLayer();
-    if (drawLayer) {
-      drawLayer.refresh();
+    if (view && drawLayer) {
+      // Trigger a redraw by temporarily changing layer visibility
+      const currentVisibility = drawLayer.visible;
+      drawLayer.visible = false;
+      setTimeout(() => {
+        drawLayer.visible = currentVisibility;
+      }, 0);
     }
   }
 

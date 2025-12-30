@@ -103,7 +103,7 @@ export class MapInitializer {
 
       // Note: UI initialization and event handlers are now handled by individual managers in main.js
 
-      // Handle loading screen
+      // Handle loading screen (now just a placeholder, actual login handled in main.js)
       this.handleLoadingScreen();
 
       // Check if it's the first visit and start tour
@@ -362,34 +362,9 @@ export class MapInitializer {
    * Handle the loading screen animation
    */
   handleLoadingScreen() {
-    const loadingScreen = document.getElementById("loadingScreen");
-    const loadingContent = document.querySelector(".loading-content");
-
-    if (!loadingScreen || !loadingContent) {
-      console.warn("Loading screen elements not found");
-      return;
-    }
-
-    function wait(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    console.log("Starting loading sequence...");
-    wait(0)
-      .then(() => {
-        loadingContent.innerHTML = `
-          <img class="loaded-gif" src="assets/images/map-loading.gif" alt="">
-          <div class="loading-text">جاري مسح الخريطة...</div>
-        `;
-        return wait(3000);
-      })
-      .finally(() => {
-        loadingScreen.classList.add("fade-out");
-        // Legend widget auto-toggle - COMMENTED OUT
-        // if (this.widgetManager) {
-        //   this.widgetManager.toggleWidget("legend");
-        // }
-      });
+    // Login is now handled in main.js before map initialization
+    // This method is kept for backward compatibility but does nothing
+    console.log("📋 Login handled by main.js");
   }
 
   /**

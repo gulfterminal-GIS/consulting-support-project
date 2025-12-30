@@ -27,47 +27,92 @@ export class ReportsManager {
    * Initialize reports panel
    */
   initializeReportsPanel() {
-    // Populate layer/region selection
-    this.populateReportSelections();
+    // Populate region selection
+    this.populateRegionSelection();
     
     // Setup event listeners
     this.setupEventListeners();
   }
 
   /**
-   * Populate layer and region selections
+   * Populate region selection
    */
-  populateReportSelections() {
-    const layerSelect = document.getElementById("reportLayerSelect");
+  populateRegionSelection() {
     const regionSelect = document.getElementById("reportRegionSelect");
     
-    if (!layerSelect || !regionSelect) return;
+    if (!regionSelect) return;
     
-    // Clear existing options
-    layerSelect.innerHTML = '<option value="">اختر طبقة...</option>';
-    regionSelect.innerHTML = '<option value="">اختر منطقة...</option>';
-    
-    // Add individual layers
-    const uploadedLayers = this.stateManager.getUploadedLayers();
-    uploadedLayers.forEach((layer, index) => {
-      const option = document.createElement("option");
-      option.value = `layer-${index}`;
-      option.textContent = layer.title;
-      layerSelect.appendChild(option);
-    });
+    // Clear existing options (keep the default options from HTML)
+    // The HTML already has the regions, so we don't need to populate them
+  }
 
-    // Add regions from map's group layers
-    const map = this.stateManager.getMap();
-    if (map) {
-      map.layers.forEach((layer, index) => {
-        if (layer.type === 'group') {
-          const option = document.createElement("option");
-          option.value = `region-${index}`;
-          option.textContent = layer.title;
-          regionSelect.appendChild(option);
-        }
-      });
+  /**
+   * Populate layer selection based on region
+   */
+  populateLayerSelection(region) {
+    const layerSelect = document.getElementById("reportLayerSelect");
+    
+    if (!layerSelect) return;
+    
+    if (!region || region === "") {
+      // No region selected - disable layer select
+      layerSelect.disabled = true;
+      layerSelect.innerHTML = '<option value="">اختر منطقة أولاً...</option>';
+      return;
     }
+    
+    if (region === "all") {
+      // All regions selected - show all layers
+      layerSelect.disabled = false;
+      layerSelect.innerHTML = '<option value="">جميع الطبقات</option>';
+      
+      const uploadedLayers = this.stateManager.getUploadedLayers();
+      uploadedLayers.forEach((layer, index) => {
+        const option = document.createElement("option");
+        option.value = `layer-${index}`;
+        option.textContent = layer.title;
+        layerSelect.appendChild(option);
+      });
+      return;
+    }
+    
+    // Specific region selected - show only layers from that region
+    layerSelect.disabled = false;
+    layerSelect.innerHTML = '<option value="">جميع طبقات المنطقة</option>';
+    
+    const map = this.stateManager.getMap();
+    if (!map) return;
+    
+    // Find the group layer for the selected region
+    let regionGroupLayer = null;
+    map.layers.forEach(layer => {
+      if (layer.type === 'group' && layer.title === region) {
+        regionGroupLayer = layer;
+      }
+    });
+    
+    if (!regionGroupLayer) {
+      console.warn(`No group layer found for region: ${region}`);
+      return;
+    }
+    
+    // Get all child layers from the region group
+    const childLayers = regionGroupLayer.layers.toArray();
+    const allLayers = this.stateManager.getUploadedLayers();
+    
+    // Add each child layer to the dropdown
+    childLayers.forEach(childLayer => {
+      // Find the global index of this layer
+      const globalIndex = allLayers.indexOf(childLayer);
+      if (globalIndex !== -1) {
+        const option = document.createElement("option");
+        option.value = `layer-${globalIndex}`;
+        option.textContent = childLayer.title;
+        layerSelect.appendChild(option);
+      }
+    });
+    
+    console.log(`✅ Populated ${childLayers.length} layers for region: ${region}`);
   }
 
   /**
@@ -82,14 +127,10 @@ export class ReportsManager {
       generateBtn.addEventListener("click", () => this.generateReport());
     }
     
-    // Mutual exclusivity between layer and region selection
-    if (layerSelect && regionSelect) {
-      layerSelect.addEventListener("change", () => {
-        if (layerSelect.value) regionSelect.value = "";
-      });
-      
-      regionSelect.addEventListener("change", () => {
-        if (regionSelect.value) layerSelect.value = "";
+    // Region selection triggers layer population
+    if (regionSelect) {
+      regionSelect.addEventListener("change", (e) => {
+        this.populateLayerSelection(e.target.value);
       });
     }
   }
@@ -104,9 +145,9 @@ export class ReportsManager {
     const layerValue = layerSelect?.value;
     const regionValue = regionSelect?.value;
     
-    if (!layerValue && !regionValue) {
+    if (!regionValue) {
       this.notificationManager.showNotification(
-        "الرجاء اختيار طبقة أو منطقة",
+        "الرجاء اختيار منطقة",
         "warning"
       );
       return;
@@ -118,19 +159,41 @@ export class ReportsManager {
       let layers = [];
       let reportTitle = "";
       
-      if (layerValue) {
+      if (layerValue && layerValue !== "") {
         // Single layer report
         const index = parseInt(layerValue.split("-")[1]);
         const layer = this.stateManager.getUploadedLayers()[index];
         layers = [layer];
         reportTitle = `تقرير: ${layer.title}`;
+      } else if (regionValue === "all") {
+        // All regions report
+        layers = this.stateManager.getUploadedLayers();
+        reportTitle = "تقرير: جميع المناطق";
       } else {
-        // Region report (multiple layers)
-        const index = parseInt(regionValue.split("-")[1]);
+        // Specific region report (all layers in that region)
         const map = this.stateManager.getMap();
-        const groupLayer = map.layers.getItemAt(index);
-        layers = groupLayer.layers.toArray();
-        reportTitle = `تقرير: ${groupLayer.title}`;
+        let regionGroupLayer = null;
+        
+        map.layers.forEach(layer => {
+          if (layer.type === 'group' && layer.title === regionValue) {
+            regionGroupLayer = layer;
+          }
+        });
+        
+        if (regionGroupLayer) {
+          layers = regionGroupLayer.layers.toArray();
+          reportTitle = `تقرير: ${regionValue}`;
+        } else {
+          throw new Error(`Region not found: ${regionValue}`);
+        }
+      }
+      
+      if (layers.length === 0) {
+        this.notificationManager.showNotification(
+          "لا توجد طبقات للتقرير",
+          "warning"
+        );
+        return;
       }
       
       // Analyze layers
@@ -212,8 +275,17 @@ export class ReportsManager {
           
           let totalArea = 0;
           for (const feature of features) {
-            const area = geometryEngine.geodesicArea(feature.geometry, "square-meters");
-            totalArea += area;
+            // Check if geometry exists and is valid
+            if (feature.geometry && feature.geometry.spatialReference) {
+              try {
+                const area = geometryEngine.geodesicArea(feature.geometry, "square-meters");
+                if (!isNaN(area) && area > 0) {
+                  totalArea += area;
+                }
+              } catch (geoError) {
+                console.warn(`Error calculating area for feature in ${layer.title}:`, geoError);
+              }
+            }
           }
           layerStats.totalArea = totalArea;
           reportData.summary.totalArea += totalArea;
@@ -350,12 +422,40 @@ export class ReportsManager {
     
     if (data.summary.totalArea > 0) {
       const areaKm2 = (data.summary.totalArea / 1000000).toFixed(2);
+      const areaHectares = (data.summary.totalArea / 10000).toFixed(2);
       html += `
           <div class="summary-card">
             <div class="summary-icon"><i class="fas fa-vector-square"></i></div>
             <div class="summary-value">${parseFloat(areaKm2).toLocaleString()}</div>
             <div class="summary-label">المساحة الإجمالية (كم²)</div>
           </div>
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fas fa-expand"></i></div>
+            <div class="summary-value">${parseFloat(areaHectares).toLocaleString()}</div>
+            <div class="summary-label">المساحة (هكتار)</div>
+          </div>
+      `;
+    }
+    
+    // Calculate average features per layer
+    const avgFeaturesPerLayer = (data.summary.totalFeatures / data.summary.totalLayers).toFixed(0);
+    html += `
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="summary-value">${parseFloat(avgFeaturesPerLayer).toLocaleString()}</div>
+            <div class="summary-label">متوسط القطع لكل طبقة</div>
+          </div>
+    `;
+    
+    // Add density insight
+    if (data.summary.totalArea > 0) {
+      const densityPerKm2 = (data.summary.totalFeatures / (data.summary.totalArea / 1000000)).toFixed(2);
+      html += `
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fas fa-th"></i></div>
+            <div class="summary-value">${parseFloat(densityPerKm2).toLocaleString()}</div>
+            <div class="summary-label">كثافة القطع (قطعة/كم²)</div>
+          </div>
       `;
     }
     
@@ -364,118 +464,109 @@ export class ReportsManager {
       </div>
     `;
 
-    // Charts section
+    // Charts section with 6 charts
     html += `
       <div class="report-charts">
-        <h3><i class="fas fa-chart-pie"></i> الرسوم البيانية</h3>
+        <h3><i class="fas fa-chart-pie"></i> الرسوم البيانية والتحليلات</h3>
         <div class="charts-grid">
           <div class="chart-container">
+            <h4>توزيع أنواع الهندسة</h4>
             <canvas id="geometryChart"></canvas>
           </div>
           <div class="chart-container">
+            <h4>توزيع القطع حسب الطبقة</h4>
             <canvas id="layerDistributionChart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h4>توزيع المساحات حسب الطبقة</h4>
+            <canvas id="areaDistributionChart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h4>مقارنة الطبقات (القطع والمساحة)</h4>
+            <canvas id="layerComparisonChart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h4>متوسط مساحة القطعة لكل طبقة</h4>
+            <canvas id="avgAreaChart"></canvas>
+          </div>
+          <div class="chart-container">
+            <h4>كثافة القطع حسب الطبقة</h4>
+            <canvas id="densityChart"></canvas>
           </div>
         </div>
       </div>
     `;
     
-    // Layer details
+    // Layer details with enhanced insights
     html += `<div class="report-layers">`;
+    html += `<h3><i class="fas fa-list"></i> تفاصيل الطبقات</h3>`;
     
     data.layers.forEach((layer, index) => {
+      const avgAreaPerFeature = layer.totalArea ? (layer.totalArea / layer.featureCount / 10000).toFixed(2) : 0;
+      const areaKm2 = layer.totalArea ? (layer.totalArea / 1000000).toFixed(2) : 0;
+      const areaHectares = layer.totalArea ? (layer.totalArea / 10000).toFixed(2) : 0;
+      const densityPerKm2 = layer.totalArea ? (layer.featureCount / (layer.totalArea / 1000000)).toFixed(2) : 0;
+      
       html += `
         <div class="layer-section">
-          <h3><i class="fas fa-layer-group"></i> ${layer.name}</h3>
+          <h4><i class="fas fa-layer-group"></i> ${layer.name}</h4>
           <div class="layer-info">
             <div class="info-item">
-              <span class="info-label">عدد القطع:</span>
+              <span class="info-label"><i class="fas fa-map-marker-alt"></i> عدد القطع</span>
               <span class="info-value">${layer.featureCount.toLocaleString()}</span>
             </div>
             <div class="info-item">
-              <span class="info-label">نوع الهندسة:</span>
+              <span class="info-label"><i class="fas fa-shapes"></i> نوع الهندسة</span>
               <span class="info-value">${this.translateGeometryType(layer.geometryType)}</span>
             </div>
       `;
       
       if (layer.totalArea) {
-        const areaKm2 = (layer.totalArea / 1000000).toFixed(2);
         html += `
             <div class="info-item">
-              <span class="info-label">المساحة الإجمالية:</span>
+              <span class="info-label"><i class="fas fa-vector-square"></i> المساحة الإجمالية</span>
               <span class="info-value">${parseFloat(areaKm2).toLocaleString()} كم²</span>
             </div>
-        `;
-      }
-      
-      html += `</div>`;
-      
-      // Field statistics
-      if (layer.fields && layer.fields.length > 0) {
-        html += `
-          <div class="field-statistics">
-            <h4>إحصائيات الحقول</h4>
-            <div class="fields-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>الحقل</th>
-                    <th>النوع</th>
-                    <th>العدد</th>
-                    <th>القيم</th>
-                  </tr>
-                </thead>
-                <tbody>
-        `;
-        
-        layer.fields.forEach(field => {
-          html += `
-                  <tr>
-                    <td><strong>${field.alias}</strong></td>
-                    <td>${this.translateFieldType(field.type)}</td>
-                    <td>${field.count}</td>
-                    <td>${this.formatFieldValues(field)}</td>
-                  </tr>
-          `;
-        });
-        
-        html += `
-                </tbody>
-              </table>
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-expand"></i> المساحة بالهكتار</span>
+              <span class="info-value">${parseFloat(areaHectares).toLocaleString()} هكتار</span>
             </div>
-          </div>
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-chart-area"></i> متوسط مساحة القطعة</span>
+              <span class="info-value">${parseFloat(avgAreaPerFeature).toLocaleString()} هكتار</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-th"></i> كثافة القطع</span>
+              <span class="info-value">${parseFloat(densityPerKm2).toLocaleString()} قطعة/كم²</span>
+            </div>
         `;
       }
       
-      html += `</div>`;
+      // Add percentage of total
+      const percentOfTotal = ((layer.featureCount / data.summary.totalFeatures) * 100).toFixed(1);
+      html += `
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-percentage"></i> نسبة من الإجمالي</span>
+              <span class="info-value">${percentOfTotal}%</span>
+            </div>
+      `;
+      
+      if (layer.totalArea && data.summary.totalArea > 0) {
+        const areaPercentOfTotal = ((layer.totalArea / data.summary.totalArea) * 100).toFixed(1);
+        html += `
+            <div class="info-item">
+              <span class="info-label"><i class="fas fa-chart-pie"></i> نسبة المساحة من الإجمالي</span>
+              <span class="info-value">${areaPercentOfTotal}%</span>
+            </div>
+        `;
+      }
+      
+      html += `</div></div>`;
     });
     
     html += `</div>`;
     
     return html;
-  }
-
-  /**
-   * Format field values for display
-   */
-  formatFieldValues(field) {
-    if (field.min !== undefined) {
-      return `
-        <div class="numeric-stats">
-          <span>الأدنى: ${field.min.toFixed(2)}</span>
-          <span>الأعلى: ${field.max.toFixed(2)}</span>
-          <span>المتوسط: ${field.avg.toFixed(2)}</span>
-        </div>
-      `;
-    } else if (field.topValues) {
-      const top3 = field.topValues.slice(0, 3);
-      return `
-        <div class="string-stats">
-          <span>قيم فريدة: ${field.uniqueCount}</span>
-          <span>الأكثر شيوعاً: ${top3[0]?.value || 'N/A'}</span>
-        </div>
-      `;
-    }
-    return '-';
   }
 
   /**
@@ -514,6 +605,18 @@ export class ReportsManager {
     
     // Layer distribution chart
     this.createLayerDistributionChart(data);
+    
+    // Area distribution chart
+    this.createAreaDistributionChart(data);
+    
+    // Layer comparison chart
+    this.createLayerComparisonChart(data);
+    
+    // Average area per feature chart
+    this.createAvgAreaChart(data);
+    
+    // Density chart
+    this.createDensityChart(data);
   }
 
   /**
@@ -533,12 +636,20 @@ export class ReportsManager {
         datasets: [{
           data: Object.values(geometryData),
           backgroundColor: [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4BC0C0',
-            '#9966FF'
-          ]
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)'
+          ],
+          borderWidth: 2
         }]
       },
       options: {
@@ -546,12 +657,35 @@ export class ReportsManager {
         maintainAspectRatio: true,
         plugins: {
           title: {
-            display: true,
-            text: 'توزيع أنواع الهندسة',
-            font: { size: 16, family: 'Arial' }
+            display: false
           },
           legend: {
-            position: 'bottom'
+            position: 'bottom',
+            labels: {
+              color: '#fff',
+              font: { 
+                size: 13, 
+                family: 'Avenir Next, Arial',
+                weight: '500'
+              },
+              padding: 15
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            borderWidth: 1,
+            padding: 12,
+            titleFont: {
+              size: 14,
+              family: 'Avenir Next, Arial'
+            },
+            bodyFont: {
+              size: 13,
+              family: 'Avenir Next, Arial'
+            }
           }
         }
       }
@@ -576,31 +710,473 @@ export class ReportsManager {
         datasets: [{
           label: 'عدد القطع',
           data: data.layers.map(l => l.featureCount),
-          backgroundColor: '#36A2EB',
-          borderColor: '#2196F3',
-          borderWidth: 1
+          backgroundColor: 'rgba(54, 162, 235, 0.8)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 2
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-          title: {
-            display: true,
-            text: 'توزيع القطع حسب الطبقة',
-            font: { size: 16, family: 'Arial' }
-          },
           legend: {
             display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            borderWidth: 1,
+            padding: 12,
+            titleFont: {
+              size: 14,
+              family: 'Avenir Next, Arial'
+            },
+            bodyFont: {
+              size: 13,
+              family: 'Avenir Next, Arial'
+            }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
             ticks: {
+              color: '#fff',
+              font: {
+                size: 12,
+                family: 'Avenir Next, Arial'
+              },
               callback: function(value) {
                 return value.toLocaleString();
               }
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          },
+          x: {
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 11,
+                family: 'Avenir Next, Arial'
+              },
+              maxRotation: 45,
+              minRotation: 45
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          }
+        }
+      }
+    });
+    
+    this.charts.push(chart);
+  }
+
+  /**
+   * Create area distribution chart
+   */
+  createAreaDistributionChart(data) {
+    const canvas = document.getElementById('areaDistributionChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Filter layers with area data
+    const layersWithArea = data.layers.filter(l => l.totalArea > 0);
+    
+    if (layersWithArea.length === 0) return;
+    
+    const chart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: layersWithArea.map(l => l.name),
+        datasets: [{
+          label: 'المساحة (كم²)',
+          data: layersWithArea.map(l => (l.totalArea / 1000000).toFixed(2)),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)',
+            'rgba(201, 203, 207, 0.8)',
+            'rgba(255, 99, 255, 0.8)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(201, 203, 207, 1)',
+            'rgba(255, 99, 255, 1)'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#fff',
+              font: { 
+                size: 11, 
+                family: 'Avenir Next, Arial',
+                weight: '500'
+              },
+              padding: 12
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            borderWidth: 1,
+            padding: 12,
+            titleFont: {
+              size: 14,
+              family: 'Avenir Next, Arial'
+            },
+            bodyFont: {
+              size: 13,
+              family: 'Avenir Next, Arial'
+            },
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = parseFloat(context.parsed).toLocaleString();
+                return `${label}: ${value} كم²`;
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    this.charts.push(chart);
+  }
+
+  /**
+   * Create layer comparison chart (features and area)
+   */
+  createLayerComparisonChart(data) {
+    const canvas = document.getElementById('layerComparisonChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    const layersWithArea = data.layers.filter(l => l.totalArea > 0);
+    
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.layers.map(l => l.name),
+        datasets: [{
+          label: 'عدد القطع',
+          data: data.layers.map(l => l.featureCount),
+          backgroundColor: 'rgba(54, 162, 235, 0.8)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 2,
+          yAxisID: 'y'
+        }, {
+          label: 'المساحة (كم²)',
+          data: layersWithArea.map(l => (l.totalArea / 1000000).toFixed(2)),
+          backgroundColor: 'rgba(255, 99, 132, 0.8)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 2,
+          yAxisID: 'y1'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#fff',
+              font: { 
+                size: 13, 
+                family: 'Avenir Next, Arial',
+                weight: '500'
+              },
+              padding: 15
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            borderWidth: 1,
+            padding: 12,
+            titleFont: {
+              size: 14,
+              family: 'Avenir Next, Arial'
+            },
+            bodyFont: {
+              size: 13,
+              family: 'Avenir Next, Arial'
+            }
+          }
+        },
+        scales: {
+          y: {
+            type: 'linear',
+            display: true,
+            position: 'left',
+            beginAtZero: true,
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 12,
+                family: 'Avenir Next, Arial'
+              },
+              callback: function(value) {
+                return value.toLocaleString();
+              }
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          },
+          y1: {
+            type: 'linear',
+            display: true,
+            position: 'right',
+            beginAtZero: true,
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 12,
+                family: 'Avenir Next, Arial'
+              },
+              callback: function(value) {
+                return value.toLocaleString() + ' كم²';
+              }
+            },
+            grid: {
+              drawOnChartArea: false
+            }
+          },
+          x: {
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 11,
+                family: 'Avenir Next, Arial'
+              },
+              maxRotation: 45,
+              minRotation: 45
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          }
+        }
+      }
+    });
+    
+    this.charts.push(chart);
+  }
+
+  /**
+   * Create average area per feature chart
+   */
+  createAvgAreaChart(data) {
+    const canvas = document.getElementById('avgAreaChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    const layersWithArea = data.layers.filter(l => l.totalArea > 0);
+    
+    if (layersWithArea.length === 0) return;
+    
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: layersWithArea.map(l => l.name),
+        datasets: [{
+          label: 'متوسط المساحة (هكتار)',
+          data: layersWithArea.map(l => (l.totalArea / l.featureCount / 10000).toFixed(2)),
+          backgroundColor: 'rgba(75, 192, 192, 0.8)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            borderWidth: 1,
+            padding: 12,
+            titleFont: {
+              size: 14,
+              family: 'Avenir Next, Arial'
+            },
+            bodyFont: {
+              size: 13,
+              family: 'Avenir Next, Arial'
+            },
+            callbacks: {
+              label: function(context) {
+                return `متوسط المساحة: ${parseFloat(context.parsed.y).toLocaleString()} هكتار`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 12,
+                family: 'Avenir Next, Arial'
+              },
+              callback: function(value) {
+                return value.toLocaleString() + ' هكتار';
+              }
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          },
+          x: {
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 11,
+                family: 'Avenir Next, Arial'
+              },
+              maxRotation: 45,
+              minRotation: 45
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          }
+        }
+      }
+    });
+    
+    this.charts.push(chart);
+  }
+
+  /**
+   * Create density chart
+   */
+  createDensityChart(data) {
+    const canvas = document.getElementById('densityChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    const layersWithArea = data.layers.filter(l => l.totalArea > 0);
+    
+    if (layersWithArea.length === 0) return;
+    
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: layersWithArea.map(l => l.name),
+        datasets: [{
+          label: 'كثافة القطع (قطعة/كم²)',
+          data: layersWithArea.map(l => (l.featureCount / (l.totalArea / 1000000)).toFixed(2)),
+          borderColor: 'rgba(153, 102, 255, 1)',
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
+          borderWidth: 3,
+          tension: 0.4,
+          fill: true,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: 'rgba(153, 102, 255, 1)',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            borderWidth: 1,
+            padding: 12,
+            titleFont: {
+              size: 14,
+              family: 'Avenir Next, Arial'
+            },
+            bodyFont: {
+              size: 13,
+              family: 'Avenir Next, Arial'
+            },
+            callbacks: {
+              label: function(context) {
+                return `الكثافة: ${parseFloat(context.parsed.y).toLocaleString()} قطعة/كم²`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 12,
+                family: 'Avenir Next, Arial'
+              },
+              callback: function(value) {
+                return value.toLocaleString();
+              }
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          },
+          x: {
+            ticks: {
+              color: '#fff',
+              font: {
+                size: 11,
+                family: 'Avenir Next, Arial'
+              },
+              maxRotation: 45,
+              minRotation: 45
+            },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
             }
           }
         }

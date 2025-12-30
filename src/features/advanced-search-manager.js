@@ -695,6 +695,9 @@ export class AdvancedSearchManager {
       return;
     }
     
+    // Store results for pagination
+    this.searchResults = results;
+    
     // Highlight results on map
     await this.highlightResultsOnMap(results);
     
@@ -709,8 +712,13 @@ export class AdvancedSearchManager {
    * Show results in side panel
    */
   showResultsInPanel(results) {
+    console.log('📋 Showing results in panel. Page:', this.currentPage, 'Results:', results);
+    
     const panelContent = document.getElementById("sidePanelContent");
-    if (!panelContent) return;
+    if (!panelContent) {
+      console.error('❌ Panel content element not found!');
+      return;
+    }
     
     // Prepare all features
     let allFeatures = [];
@@ -726,44 +734,54 @@ export class AdvancedSearchManager {
       });
     });
     
-    // Store for pagination
+    console.log('📊 Total features:', allFeatures.length);
+    
+    // Store for pagination - DON'T reset currentPage if it's already set
     this.allResultFeatures = allFeatures;
-    this.currentPage = 1;
+    if (!this.currentPage || this.currentPage < 1) {
+      this.currentPage = 1;
+    }
     this.itemsPerPage = 10;
     this.totalPages = Math.ceil(allFeatures.length / this.itemsPerPage);
+    
+    console.log('📄 Current page:', this.currentPage, 'Total pages:', this.totalPages);
     
     let html = `
       <div class="search-results-panel">
         <!-- Results Header -->
-        <div class="results-panel-header">
-          <div class="results-stats-compact">
-            <div class="stat-badge">
-              <i class="fas fa-check-circle"></i>
-              <span>${results.totalFeatures} نتيجة</span>
+        <liquid-glass-effect>
+          <div class="results-panel-header">
+            <div class="results-stats-compact">
+              <div class="stat-badge">
+                <i class="fas fa-check-circle"></i>
+                <span>${results.totalFeatures} نتيجة</span>
+              </div>
+              <div class="stat-badge">
+                <i class="fas fa-layer-group"></i>
+                <span>${results.layers.length} طبقة</span>
+              </div>
             </div>
-            <div class="stat-badge">
-              <i class="fas fa-layer-group"></i>
-              <span>${results.layers.length} طبقة</span>
+            <div class="results-panel-actions">
+              <button class="icon-btn" onclick="window.exportSearchResults()" title="تصدير">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="icon-btn" onclick="window.clearSearchResults()" title="مسح">
+                <i class="fas fa-eraser"></i>
+              </button>
             </div>
           </div>
-          <div class="results-panel-actions">
-            <button class="icon-btn" onclick="window.exportSearchResults()" title="تصدير">
-              <i class="fas fa-download"></i>
-            </button>
-            <button class="icon-btn" onclick="window.clearSearchResults()" title="مسح">
-              <i class="fas fa-eraser"></i>
-            </button>
-          </div>
-        </div>
+        </liquid-glass-effect>
         
         <!-- Search in Results -->
-        <div class="results-search-box">
-          <i class="fas fa-search"></i>
-          <input type="text" 
-                 id="resultsSearchInput" 
-                 placeholder="ابحث في النتائج..." 
-                 class="results-search-input">
-        </div>
+        <liquid-glass-effect>
+          <div class="results-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" 
+                   id="resultsSearchInput" 
+                   placeholder="ابحث في النتائج..." 
+                   class="results-search-input">
+          </div>
+        </liquid-glass-effect>
         
         <!-- Results List -->
         <div class="results-list" id="searchResultsList">
@@ -815,9 +833,24 @@ export class AdvancedSearchManager {
    * Go to next page
    */
   goToNextPage() {
+    console.log('🔄 Next page clicked. Current page:', this.currentPage, 'Total pages:', this.totalPages);
+    console.log('📊 Search results:', this.searchResults);
+    
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.showResultsInPanel(this.searchResults);
+      console.log('✅ Moving to page:', this.currentPage);
+      
+      if (this.searchResults) {
+        this.showResultsInPanel(this.searchResults);
+      } else {
+        console.error('❌ No search results stored!');
+        this.notificationManager.showNotification(
+          "خطأ في التنقل بين الصفحات",
+          "error"
+        );
+      }
+    } else {
+      console.log('⚠️ Already on last page');
     }
   }
 
@@ -825,9 +858,23 @@ export class AdvancedSearchManager {
    * Go to previous page
    */
   goToPreviousPage() {
+    console.log('🔄 Previous page clicked. Current page:', this.currentPage, 'Total pages:', this.totalPages);
+    
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.showResultsInPanel(this.searchResults);
+      console.log('✅ Moving to page:', this.currentPage);
+      
+      if (this.searchResults) {
+        this.showResultsInPanel(this.searchResults);
+      } else {
+        console.error('❌ No search results stored!');
+        this.notificationManager.showNotification(
+          "خطأ في التنقل بين الصفحات",
+          "error"
+        );
+      }
+    } else {
+      console.log('⚠️ Already on first page');
     }
   }
 
@@ -848,15 +895,16 @@ export class AdvancedSearchManager {
       .slice(0, 3);
     
     let html = `
-      <div class="result-card" data-index="${index}" data-layer-index="${layerIndex}" data-feature-index="${featureIndex}">
-        <div class="result-card-header">
-          <div class="result-card-title">
-            <i class="fas fa-map-marker-alt"></i>
-            <span class="result-layer-name">${layerName}</span>
+      <liquid-glass-effect>
+        <div class="result-card" data-index="${index}" data-layer-index="${layerIndex}" data-feature-index="${featureIndex}">
+          <div class="result-card-header">
+            <div class="result-card-title">
+              <i class="fas fa-map-marker-alt"></i>
+              <span class="result-layer-name">${layerName}</span>
+            </div>
+            <span class="result-number">#${index + 1}</span>
           </div>
-          <span class="result-number">#${index + 1}</span>
-        </div>
-        <div class="result-card-body">
+          <div class="result-card-body">
     `;
     
     displayFields.forEach(field => {
@@ -870,18 +918,19 @@ export class AdvancedSearchManager {
     });
     
     html += `
+          </div>
+          <div class="result-card-actions">
+            <button class="result-action-btn" onclick="window.zoomToFeature(${layerIndex}, ${featureIndex})" title="تكبير">
+              <i class="fas fa-search-plus"></i>
+              <span>تكبير</span>
+            </button>
+            <button class="result-action-btn" onclick="window.showFeatureDetails(${layerIndex}, ${featureIndex})" title="التفاصيل">
+              <i class="fas fa-info-circle"></i>
+              <span>التفاصيل</span>
+            </button>
+          </div>
         </div>
-        <div class="result-card-actions">
-          <button class="result-action-btn" onclick="window.zoomToFeature(${layerIndex}, ${featureIndex})" title="تكبير">
-            <i class="fas fa-search-plus"></i>
-            <span>تكبير</span>
-          </button>
-          <button class="result-action-btn" onclick="window.showFeatureDetails(${layerIndex}, ${featureIndex})" title="التفاصيل">
-            <i class="fas fa-info-circle"></i>
-            <span>التفاصيل</span>
-          </button>
-        </div>
-      </div>
+      </liquid-glass-effect>
     `;
     
     return html;

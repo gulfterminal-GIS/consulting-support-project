@@ -82,6 +82,14 @@ export function bindWindowFunctions(managers) {
     return attributeTable.showExportOptions();
   };
 
+  window.closeExportModal = () => {
+    return attributeTable.closeExportModal();
+  };
+
+  window.exportData = (format) => {
+    return attributeTable.exportData(format);
+  };
+
   window.previousPage = () => {
     return attributeTable.previousPage();
   };
@@ -416,6 +424,16 @@ export function bindWindowFunctions(managers) {
 
   window.backToSearchResults = () => {
     return managers.advancedSearchManager?.backToSearchResults();
+  };
+
+  window.backToSearchPanel = () => {
+    // Close the results modal and reopen the search panel
+    if (managers.advancedSearchManager) {
+      managers.advancedSearchManager.closeResultsModal();
+    }
+    if (managers.panelManager) {
+      managers.panelManager.openSidePanel("بحث متقدم", "advancedSearchPanelTemplate");
+    }
   };
 
   window.clearSearchResults = () => {

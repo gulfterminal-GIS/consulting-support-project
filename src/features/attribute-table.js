@@ -38,14 +38,9 @@ export class AttributeTable {
       tableWidget.classList.remove("hidden");
       if (btn) btn.classList.add("active");
       this.initializeTableLayerSelect();
-
-      if (this.stateManager.getUploadedLayers().length > 0) {
-        const select = document.getElementById("tableLayerSelect");
-        if (select) {
-          select.value = 0;
-          await this.loadTableData(0);
-        }
-      }
+      
+      // Start with empty table - don't auto-load first layer
+      this.clearTable();
     } else {
       tableWidget.classList.add("hidden");
       if (btn) btn.classList.remove("active");
@@ -56,17 +51,23 @@ export class AttributeTable {
    * Initialize the layer select dropdown
    */
   initializeTableLayerSelect() {
-    const select = document.getElementById("tableLayerSelect");
-    select.innerHTML = '<option value="">Select a layer...</option>';
+    const regionSelect = document.getElementById("tableRegionSelect");
+    const layerSelect = document.getElementById("tableLayerSelect");
+    
+    // Hide layer select initially
+    if (layerSelect) {
+      layerSelect.disabled = true;
+      layerSelect.innerHTML = '<option value="">First select a region...</option>';
+    }
+    
+    // Initialize region select
+    if (regionSelect) {
+      regionSelect.addEventListener("change", (e) => {
+        this.filterLayersByRegion(e.target.value);
+      });
+    }
 
-    this.stateManager.getUploadedLayers().forEach((layer, index) => {
-      const option = document.createElement("option");
-      option.value = index;
-      option.textContent = layer.title;
-      select.appendChild(option);
-    });
-
-    select.addEventListener("change", async (e) => {
+    layerSelect.addEventListener("change", async (e) => {
       if (e.target.value !== "") {
         await this.loadTableData(parseInt(e.target.value));
       } else {
@@ -82,6 +83,66 @@ export class AttributeTable {
         this.filterTableData(e.target.value);
       }, 300)
     );
+  }
+
+  /**
+   * Filter layers by region
+   */
+  filterLayersByRegion(region) {
+    const layerSelect = document.getElementById("tableLayerSelect");
+    
+    if (!region) {
+      // No region selected - disable layer select
+      layerSelect.disabled = true;
+      layerSelect.innerHTML = '<option value="">First select a region...</option>';
+      this.clearTable();
+    } else {
+      // Region selected - enable and populate layer select
+      layerSelect.disabled = false;
+      this.populateLayerSelect(region);
+    }
+  }
+
+  /**
+   * Populate layer select based on region filter
+   */
+  populateLayerSelect(region) {
+    const select = document.getElementById("tableLayerSelect");
+    select.innerHTML = '<option value="">Select a layer...</option>';
+
+    const map = this.stateManager.getMap();
+    if (!map) return;
+    
+    // Find the group layer for the selected region
+    let regionGroupLayer = null;
+    map.layers.forEach(layer => {
+      if (layer.type === 'group' && layer.title === region) {
+        regionGroupLayer = layer;
+      }
+    });
+    
+    if (!regionGroupLayer) {
+      console.warn(`No group layer found for region: ${region}`);
+      return;
+    }
+    
+    // Get all child layers from the region group
+    const childLayers = regionGroupLayer.layers.toArray();
+    const allLayers = this.stateManager.getUploadedLayers();
+    
+    // Add each child layer to the dropdown
+    childLayers.forEach(childLayer => {
+      // Find the global index of this layer
+      const globalIndex = allLayers.indexOf(childLayer);
+      if (globalIndex !== -1) {
+        const option = document.createElement("option");
+        option.value = globalIndex;
+        option.textContent = childLayer.title;
+        select.appendChild(option);
+      }
+    });
+    
+    console.log(`✅ Populated ${childLayers.length} layers for region: ${region}`);
   }
 
   /**
