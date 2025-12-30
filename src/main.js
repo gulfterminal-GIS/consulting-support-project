@@ -448,6 +448,12 @@ function setupLoginHandler() {
           setTimeout(() => {
             loadingScreen.classList.add("fade-out");
             console.log("✅ Login screen hidden, application ready");
+            
+            // Completely remove login screen after fade animation
+            setTimeout(() => {
+              loadingScreen.style.display = "none";
+              console.log("✅ Login screen removed from DOM");
+            }, 1000); // Wait for fade-out transition to complete
           }, 1000);
         }).catch((error) => {
           console.error("❌ Application initialization failed:", error);
