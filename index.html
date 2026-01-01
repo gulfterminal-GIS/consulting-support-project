@@ -1,37 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>GIS Web App</title>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css" />
+  <title>تسجيل الدخول - نظام المعلومات الجغرافية</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@11.2.0/dist/css/shepherd.css">
-  <script src="https://cdn.jsdelivr.net/npm/shepherd.js@11.2.0/dist/js/shepherd.min.js"></script>
-
-  <!-- Chart.js for reports -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  
-  <!-- jsPDF for PDF export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <link rel="stylesheet" href="assets/styles/style.css" />
   <link rel="stylesheet" href="assets/styles/liquid.css" />
   <link href="https://fonts.googleapis.com/css?family=Gruppo|Orbitron&display=swap" rel="stylesheet">
-  <script src="https://js.arcgis.com/4.32/"></script>
 </head>
 
 <body>
   <!-- Login Screen -->
-  <div id="loadingScreen" class="loading-screen login-screen">
+  <div class="loading-screen login-screen">
     <div class="login-split-container">
       <!-- Left Side - Login Form -->
       <div class="login-left-panel">
         <liquid-glass-effect>
-          <div class="login-box" id="loginBox">
+          <div class="login-box">
             <div class="login-header">
               <img class="login-logo" src="assets/images/logo-2030.svg" alt="Logo">
               <h2 class="login-title">تسجيل الدخول</h2>
@@ -50,7 +36,6 @@
                   class="form-input" 
                   placeholder="أدخل اسم المستخدم"
                   autocomplete="username"
-                  novalidate
                 >
               </div>
               
@@ -66,15 +51,13 @@
                     class="form-input" 
                     placeholder="أدخل كلمة المرور"
                     autocomplete="current-password"
-                    novalidate
                   >
                   <button type="button" class="toggle-password" id="togglePassword" title="إظهار/إخفاء كلمة المرور">
-                    <i class="fas fa-eye-slash"></i><!-- v2024.12.30.011 - closed eye by default -->
+                    <i class="fas fa-eye-slash"></i>
                   </button>
                 </div>
               </div>
               
-              <!-- Alerts appear here, right before the login button -->
               <div id="loginWarning" class="login-warning" style="display: none;">
                 <i class="fas fa-exclamation-triangle"></i>
                 <span>يرجى ملء جميع الحقول المطلوبة</span>
@@ -90,12 +73,6 @@
                 <span>دخول</span>
               </button>
             </form>
-          </div>
-          
-          <div class="login-loading" id="loginLoading">
-            <img class="login-loading-logo" src="assets/images/logo-2030.svg" alt="Logo">
-            <div class="login-loading-spinner"></div>
-            <div class="login-loading-text">جاري تحميل الخريطة...</div>
           </div>
         </liquid-glass-effect>
       </div>
@@ -155,1291 +132,109 @@
     </div>
   </div>
 
-  <!-- Main Map Container -->
-  <div id="displayMap"></div>
-
-  <!-- Header -->
-  <!-- <header class="top-bar">
-    <div class="brand">
-      <img class="logo" src="assets/images/hail_lg_dark_1.png" alt="">
-      <span id="titleApp">حدائق حائل</span>
-    </div> -->
-
-    <!-- Search Container -->
-    <!-- <div class="search-container">
-      <div class="search-box">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="searchInput" placeholder="Search addresses..." autocomplete="off" />
-        <button id="clearSearch" class="clear-search" style="display: none;">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div id="searchSuggestions" class="search-suggestions"></div>
-    </div>
-  </header> -->
-  <!-- Ends Header -->
-
-  <!-- Top Toolbar - Region Navigation -->
-  <div class="top-toolbar">
-    <div class="region-navigation">
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('الرياض')" data-region="الرياض">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>الرياض</span>
-        </button>
-      </liquid-glass-effect>
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('مكة المكرمة')" data-region="مكة المكرمة">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>مكة المكرمة</span>
-        </button>
-      </liquid-glass-effect>
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('المدينة المنورة')" data-region="المدينة المنورة">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>المدينة المنورة</span>
-        </button>
-      </liquid-glass-effect>
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('القصيم')" data-region="القصيم">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>القصيم</span>
-        </button>
-      </liquid-glass-effect>
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('الشرقية')" data-region="الشرقية">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>الشرقية</span>
-        </button>
-      </liquid-glass-effect>
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('عسير')" data-region="عسير">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>عسير</span>
-        </button>
-      </liquid-glass-effect>
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('تبوك')" data-region="تبوك">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>تبوك</span>
-        </button>
-      </liquid-glass-effect>
-      <liquid-glass-effect>
-        <button class="region-btn" onclick="window.navigateToRegion('نجران')" data-region="نجران">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>نجران</span>
-        </button>
-      </liquid-glass-effect>
-    </div>
-  </div>
-  <!-- Ends Top Toolbar -->
-
-
-  <!-- Tab Content Modal -->
-  <div id="tabBackdrop" class="tab-backdrop hidden">
-    <div class="tab-content-card">
-      <!-- Content will be dynamically inserted here -->
-    </div>
-  </div>
-
-  <!-- Main Toolbar (Desktop) -->
-  <div class="main-toolbar">
-    <liquid-glass-effect>
-      <div class="toolbar-group">
-        <button class="toolbar-btn" id="uploadBtn" title="Upload Files">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <!--         <span class="toolbar-label">Upload</span> -->
-          <span class="toolbar-label">رفع ملف</span>
-        </button>
-        <button class="toolbar-btn" id="layersBtn" title="Layers">
-          <i class="fas fa-layer-group"></i>
-          <!--         <span class="toolbar-label">Layers</span> -->
-          <span class="toolbar-label">الطبقات</span>
-        </button>
-        <button class="toolbar-btn" id="basemapBtn" title="Basemap">
-          <i class="fas fa-map"></i>
-          <!--         <span class="toolbar-label">Basemap</span> -->
-          <span class="toolbar-label">خريطة الأساس</span>
-        </button>
-      </div>
-  
-      <div class="toolbar-separator"></div>
-  
-      <div class="toolbar-group">
-        <!-- <button class="toolbar-btn" id="measureBtn" title="Measure">
-               <i class="fas fa-ruler-combined"></i>
-               <span class="toolbar-label">Measure</span>
-             </button> -->
-        <button class="toolbar-btn" id="drawBtn" title="Draw">
-          <i class="fas fa-pencil-alt"></i>
-          <!--         <span class="toolbar-label">Draw</span> -->
-          <span class="toolbar-label">الرسم</span>
-        </button>
-        <button class="toolbar-btn" id="locateBtn" title="My Location">
-          <i class="fas fa-crosshairs"></i>
-          <!--         <span class="toolbar-label">Locate</span> -->
-          <span class="toolbar-label">موقعي</span>
-        </button>
-      </div>
-  
-      <div class="toolbar-separator"></div>
-  
-      <div class="toolbar-group">
-        <button class="toolbar-btn" id="analysisBtn" title="Analysis">
-          <i class="fas fa-chart-area"></i>
-          <!--         <span class="toolbar-label">Analysis</span> -->
-          <span class="toolbar-label">تحليل</span>
-        </button>
-        <!-- <button class="toolbar-btn" id="visualizeBtn" title="Visualization">
-          <i class="fas fa-fire"></i>
-          <span class="toolbar-label">عرض</span>
-        </button> -->
-
-        <!-- <button class="toolbar-btn" id="swipeBtn" title="Swipe">
-          <i class="fas fa-arrows-alt-h"></i>
-          <span class="toolbar-label">مقارنة</span>
-        </button> -->
-  
-        <button class="toolbar-btn" id="classificationBtn" title="Classification">
-          <i class="fas fa-palette"></i>
-          <!--         <span class="toolbar-label">Classify</span> -->
-          <span class="toolbar-label">تصنيف</span>
-        </button>
-  
-        <button class="toolbar-btn" id="tableBtn" onclick="toggleAttributeTable()" title="Attribute Table">
-          <i class="fas fa-table"></i>
-          <!--         <span class="toolbar-label">Table</span> -->
-          <span class="toolbar-label">جدول البيانات</span>
-        </button>
-        
-        <button class="toolbar-btn" id="reportsBtn" title="Reports">
-          <i class="fas fa-file-alt"></i>
-          <span class="toolbar-label">التقارير</span>
-        </button>
-        
-        <button class="toolbar-btn" id="advancedSearchBtn" title="Advanced Search">
-          <i class="fas fa-search-plus"></i>
-          <span class="toolbar-label">بحث متقدم</span>
-        </button>
-      </div>
-  
-      <div class="toolbar-separator"></div>
-  
-      <div class="toolbar-group">
-        <!-- <button class="toolbar-btn" onclick="toggleWidget('legend')" title="Legend">
-          <i class="fas fa-list"></i>
-          <span class="toolbar-label">مفتاح الخريطة</span>
-        </button> -->
-        <button class="toolbar-btn" onclick="toggleWidget('bookmarks')" title="Bookmarks">
-          <i class="fas fa-bookmark"></i>
-          <!--         <span class="toolbar-label">Bookmarks</span> -->
-          <span class="toolbar-label">العلامات المرجعية</span>
-        </button>
-        <button class="toolbar-btn" onclick="toggleWidget('print')" title="Print">
-          <i class="fas fa-print"></i>
-          <!--         <span class="toolbar-label">Print</span> -->
-          <span class="toolbar-label">طباعة</span>
-        </button>
-      </div>
-    </liquid-glass-effect>
-  </div>
-
-
-  <img class="logo" src="assets/images/hail_lg_dark_1.png" alt="">
-  
-  <!-- Side Panel Container -->
-  <div class="side-panel" id="sidePanel">
-    <div class="side-panel-header">
-      <h2 id="sidePanelTitle">Panel</h2>
-      <button class="side-panel-close" id="sidePanelClose">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="side-panel-content" id="sidePanelContent">
-      <!-- Dynamic content will be loaded here -->
-    </div>
-  </div>
-
-  <!-- Quick Actions (Bottom Right) -->
-  <div class="quick-actions">
-    <!-- Tour Button - User can start manually -->
-    <liquid-glass-effect>
-      <button class="quick-action-btn" onclick="manuallyStartTour()" title="Feature Tour">
-        <i class="fas fa-route"></i>
-      </button>
-    </liquid-glass-effect>
-
-    <liquid-glass-effect>
-      <button class="quick-action-btn" onclick="zoomIn()" title="Zoom In">
-        <i class="fas fa-plus"></i>
-      </button>
-    </liquid-glass-effect>
-
-    <liquid-glass-effect>
-      <button class="quick-action-btn" onclick="zoomOut()" title="Zoom Out">
-        <i class="fas fa-minus"></i>
-      </button>
-    </liquid-glass-effect>
-
-    <liquid-glass-effect>
-      <button class="quick-action-btn" onclick="toggleWidget('home')" title="Home">
-        <i class="fas fa-home"></i>
-      </button>
-    </liquid-glass-effect>
-
-    <liquid-glass-effect>
-      <button class="quick-action-btn" onclick="toggleWidget('fullscreen')" title="Fullscreen">
-        <i class="fas fa-expand"></i>
-      </button>
-    </liquid-glass-effect>
-
-    <liquid-glass-effect>
-      <button class="quick-action-btn" id="clearBtn" title="Clear All">
-        <i class="fas fa-trash"></i>
-      </button>
-    </liquid-glass-effect>
-  </div>
-
-  <!-- Mobile Toolbar Button -->
-   <div class="mobile-toolbar-toggle-wrapper">
-     <liquid-glass-effect>
-       <button class="mobile-toolbar-toggle" id="mobileToolbarToggle">
-         <i class="fas fa-tools"></i>
-       </button>
-     </liquid-glass-effect>
-   </div>
-
-    <!-- Mobile Toolbar Menu -->
-  <div class="mobile-toolbar-menu" id="mobileToolbarMenu">
-    <div class="mobile-menu-header">
-      <h3>Tools</h3>
-      <button class="mobile-menu-close" id="mobileMenuClose">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div class="mobile-menu-grid">
-      <button class="mobile-menu-item" data-action="upload">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <span>رفع ملف</span>
-      </button>
-      <button class="mobile-menu-item" data-action="layers">
-        <i class="fas fa-layer-group"></i>
-        <span>الطبقات</span>
-      </button>
-      <button class="mobile-menu-item" data-action="basemap">
-        <i class="fas fa-map"></i>
-        <span>خريطة الأساس</span>
-      </button>
-      <!-- <button class="mobile-menu-item" data-action="measure">
-        <i class="fas fa-ruler-combined"></i>
-        <span>Measure</span>
-      </button> -->
-      <button class="mobile-menu-item" data-action="draw">
-        <i class="fas fa-pencil-alt"></i>
-        <span>الرسم</span>
-      </button>
-      <button class="mobile-menu-item" data-action="locate">
-        <i class="fas fa-crosshairs"></i>
-        <span>موقعي</span>
-      </button>
-      <button class="mobile-menu-item" data-action="analysis">
-        <i class="fas fa-chart-area"></i>
-        <span>تحليل</span>
-      </button>
-      <!-- <button class="mobile-menu-item" data-action="visualize">
-        <i class="fas fa-fire"></i>
-        <span>عرض</span>
-      </button> -->
-
-      <!-- <button class="mobile-menu-item" data-action="swipe">
-        <i class="fas fa-arrows-alt-h"></i>
-        <span>مقارنة</span>
-      </button> -->
-
-      <button class="mobile-menu-item" data-action="classification">
-        <i class="fas fa-palette"></i>
-        <span>تصنيف</span>
-      </button>
-
-      <button class="mobile-menu-item" onclick="toggleAttributeTable()">
-        <i class="fas fa-table"></i>
-        <span>جدول البيانات</span>
-      </button>
-      <button class="mobile-menu-item" data-action="reports">
-        <i class="fas fa-file-alt"></i>
-        <span>التقارير</span>
-      </button>
-      <button class="mobile-menu-item" data-action="advancedSearch">
-        <i class="fas fa-search-plus"></i>
-        <span>بحث متقدم</span>
-      </button>
-      <!-- <button class="mobile-menu-item" onclick="toggleWidget('legend')">
-        <i class="fas fa-list"></i>
-        <span>مفتاح الخريطة</span>
-      </button> -->
-      <button class="mobile-menu-item" onclick="toggleWidget('bookmarks')">
-        <i class="fas fa-bookmark"></i>
-        <span>العلامات المرجعية</span>
-      </button>
-      <button class="mobile-menu-item" onclick="toggleWidget('print')">
-        <i class="fas fa-print"></i>
-        <span>طباعة</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Coordinates Display -->
-  <div class="coordinates-display">
-    <liquid-glass-effect>
-      <img src="assets/images/mdi--location.svg" alt="">
-      <span id="coordDisplay">Move cursor over map</span>
-      <button id="copyCoords" class="copy-coords-btn" title="Copy coordinates">
-        <img src="assets/images/fa6-solid--copy.svg" alt="">
-      </button>
-    </liquid-glass-effect>
-  </div>
-
-  <!-- Country Info Display -->
-  <div id="countryInfo" class="country-info-display hidden">
-    <h3 id="countryName"></h3>
-    <div id="countryDetails"></div>
-  </div>
-
-
-  <!-- Panel Templates (Hidden) -->
-  <div style="display: none;">
-    <!-- Upload Panel Template -->
-    <div id="uploadPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div id="dropZone" class="drop-zone">
-            <div class="drop-zone-icon">
-              <i class="fas fa-cloud-upload-alt"></i>
-            </div>
-            <h3>Drop files here</h3>
-            <p>or click to browse</p>
-            <div class="supported-formats">
-              <span class="format-badge">CSV</span>
-              <span class="format-badge">GeoJSON</span>
-            </div>
-            <input type="file" id="fileInput" accept=".csv,.geojson,.json" hidden multiple />
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-
-    <!-- Layers Panel Template -->
-    <div id="layersPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div id="layerList" class="layer-list">
-            <div class="empty-state">
-              <i class="fas fa-layer-group"></i>
-              <p>No layers loaded</p>
-            </div>
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-
-    <!-- Basemap Panel Template -->
-    <div id="basemapPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div class="basemap-gallery">
-            <div class="basemap-item" data-basemap="topo">
-              <div class="basemap-thumbnail">
-                <img src="https://js.arcgis.com/4.32/esri/images/basemap/topo.jpg" alt="Topo">
-                <div class="basemap-check"><i class="fas fa-check"></i></div>
-              </div>
-              <span>Topographic</span>
-            </div>
-            <div class="basemap-item" data-basemap="streets">
-              <div class="basemap-thumbnail">
-                <img src="https://js.arcgis.com/4.32/esri/images/basemap/streets.jpg" alt="Streets">
-                <div class="basemap-check"><i class="fas fa-check"></i></div>
-              </div>
-              <span>Streets</span>
-            </div>
-            <div class="basemap-item" data-basemap="satellite">
-              <div class="basemap-thumbnail">
-                <img src="https://js.arcgis.com/4.32/esri/images/basemap/satellite.jpg" alt="Satellite">
-                <div class="basemap-check"><i class="fas fa-check"></i></div>
-              </div>
-              <span>Satellite</span>
-            </div>
-            <div class="basemap-item active" data-basemap="hybrid">
-              <div class="basemap-thumbnail">
-                <img src="https://js.arcgis.com/4.32/esri/images/basemap/hybrid.jpg" alt="Hybrid">
-                <div class="basemap-check"><i class="fas fa-check"></i></div>
-              </div>
-              <span>Hybrid</span>
-            </div>
-            <div class="basemap-item" data-basemap="dark-gray">
-              <div class="basemap-thumbnail">
-                <img src="https://js.arcgis.com/4.32/esri/images/basemap/dark-gray.jpg" alt="Dark">
-                <div class="basemap-check"><i class="fas fa-check"></i></div>
-              </div>
-              <span>Dark Gray</span>
-            </div>
-            <div class="basemap-item" data-basemap="gray">
-              <div class="basemap-thumbnail">
-                <img src="https://js.arcgis.com/4.32/esri/images/basemap/gray.jpg" alt="Gray">
-                <div class="basemap-check"><i class="fas fa-check"></i></div>
-              </div>
-              <span>Light Gray</span>
-            </div>
-            <div class="basemap-item" data-basemap="oceans">
-              <div class="basemap-thumbnail">
-                <img src="https://js.arcgis.com/4.32/esri/images/basemap/oceans.jpg" alt="Oceans">
-                <div class="basemap-check"><i class="fas fa-check"></i></div>
-              </div>
-              <span>Oceans</span>
-            </div>
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-
-    <!-- Drawing Panel Template -->
-    <div id="drawingPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div class="drawing-tools">
-            <button class="draw-tool-btn" data-tool="point" title="Draw Point">
-              <i class="fas fa-map-marker-alt"></i>
-              <span>Point</span>
-            </button>
-            <button class="draw-tool-btn" data-tool="polyline" title="Draw Line">
-              <i class="fas fa-route"></i>
-              <span>Line</span>
-            </button>
-            <button class="draw-tool-btn" data-tool="polygon" title="Draw Polygon">
-              <i class="fas fa-draw-polygon"></i>
-              <span>Polygon</span>
-            </button>
-            <button class="draw-tool-btn" data-tool="rectangle" title="Draw Rectangle">
-              <i class="fas fa-vector-square"></i>
-              <span>Rectangle</span>
-            </button>
-            <button class="draw-tool-btn" data-tool="circle" title="Draw Circle">
-              <i class="fas fa-circle"></i>
-              <span>Circle</span>
-            </button>
-          </div>
-
-          <div class="drawing-settings">
-            <div class="setting-row">
-              <label><i class="fas fa-palette"></i> Color</label>
-              <input type="color" id="drawColor" value="#2196F3" class="color-picker">
-            </div>
-            <div class="setting-row">
-              <label><i class="fas fa-adjust"></i> Opacity</label>
-              <div class="slider-container">
-                <input type="range" id="drawOpacity" min="0" max="100" value="70" class="opacity-slider">
-                <span class="slider-value">70%</span>
-              </div>
-            </div>
-            <button class="clear-drawings-btn" id="clearDrawings" type="button">
-              <i class="fas fa-eraser"></i> 
-              Clear All Drawings
-            </button>
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-
-    <!-- Analysis Panel Template -->
-    <div id="analysisPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div class="analysis-grid">
-            <button class="analysis-card" onclick="startBufferAnalysis()">
-              <div class="analysis-icon">
-                <i class="fas fa-circle-notch"></i>
-              </div>
-              <h4>Buffer</h4>
-              <p>Create buffer zones around features</p>
-            </button>
-            <button class="analysis-card" onclick="startIntersectAnalysis()">
-              <div class="analysis-icon">
-                <i class="fas fa-object-group"></i>
-              </div>
-              <h4>Intersect</h4>
-              <p>Find overlapping areas</p>
-            </button>
-            <button class="analysis-card" onclick="startDistanceAnalysis()">
-              <div class="analysis-icon">
-                <i class="fas fa-ruler-horizontal"></i>
-              </div>
-              <h4>Distance</h4>
-              <p>Measure between features</p>
-            </button>
-            <button class="analysis-card" onclick="startAreaAnalysis()">
-              <div class="analysis-icon">
-                <i class="fas fa-vector-square"></i>
-              </div>
-              <h4>Calculate Area</h4>
-              <p>Compute polygon areas</p>
-            </button>
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-
-    <!-- Visualization Panel Template -->
-    <div id="visualizationPanelTemplate">
-      <div class="panel-section">
-        <div class="viz-option">
-          <div class="viz-header">
-            <h4><i class="fas fa-fire"></i> Heatmap</h4>
-            <label class="toggle-switch">
-              <input type="checkbox" id="heatmapToggle" onchange="toggleHeatmap()">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="viz-controls" id="heatmapControls" style="display: none;">
-            <select id="heatmapLayerSelect" class="select-input">
-              <option value="">Select point layer...</option>
-            </select>
-            <button class="settings-btn" onclick="showHeatmapSettings()" id="heatmapSettingsBtn">
-              <i class="fas fa-cog"></i> Settings
-            </button>
-          </div>
-        </div>
-
-        <div class="viz-option">
-          <div class="viz-header">
-            <h4><i class="fas fa-clock"></i> Time Animation</h4>
-            <label class="toggle-switch">
-              <input type="checkbox" id="timeToggle" onchange="toggleTimeControls()">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="viz-controls" id="timeControlsPanel" style="display: none;">
-            <select id="timeLayerSelect" class="select-input">
-              <option value="">Select time-enabled layer...</option>
-            </select>
-            <div class="time-field-select" style="display: none;">
-              <label class="form-label">Date Field:</label>
-              <select id="timeFieldSelect" class="select-input">
-                <option value="">Select date field...</option>
-              </select>
-            </div>
-            <div class="time-slider-container" style="display: none;">
-              <div id="timeSliderDiv"></div>
-              <div class="time-animation-controls">
-                <button class="time-btn" onclick="playTimeAnimation()">
-                  <i class="fas fa-play" id="playIcon"></i>
-                </button>
-                <button class="time-btn" onclick="stopTimeAnimation()">
-                  <i class="fas fa-stop"></i>
-                </button>
-                <select id="animationSpeed" class="speed-select">
-                  <option value="0.5">0.5x</option>
-                  <option value="1" selected>1x</option>
-                  <option value="2">2x</option>
-                  <option value="5">5x</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Classification Panel Template -->
-    <div id="classificationPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div class="classification-container">
-            <div class="form-group">
-              <label class="form-label">اختر طبقة</label>
-              <select id="classifyLayerSelect" class="select-input">
-                <option value="">اختر طبقة...</option>
-              </select>
-            </div>
-
-            <div class="form-group" id="classifyFieldSection" style="display: none;">
-              <label class="form-label">اختر حقل</label>
-              <select id="classifyFieldSelect" class="select-input">
-                <option value="">اختر حقل...</option>
-              </select>
-            </div>
-
-            <div id="fieldStatistics" class="field-stats" style="display: none;">
-              <div class="stats-content"></div>
-            </div>
-
-            <div class="classification-actions" style="display: none;">
-              <button class="action-btn primary" onclick="applyClassification()">
-                <i class="fas fa-paint-brush"></i> Apply Classification
-              </button>
-              <button class="action-btn secondary" onclick="resetClassification()">
-                <i class="fas fa-undo"></i> Reset
-              </button>
-            </div>
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-
-    <!-- Swipe Panel Template -->
-    <div id="swipePanelTemplate">
-      <div class="panel-section">
-        <div class="swipe-config">
-          <div class="form-group">
-            <label class="form-label">نوع المقارنة</label>
-            <div class="button-group">
-              <button class="button-group-item active" onclick="setSwipeMode('layers')">
-                <i class="fas fa-layer-group"></i> بين الطبقات
-              </button>
-              <button class="button-group-item" onclick="setSwipeMode('basemap-layer')">
-                <i class="fas fa-map"></i> خريطة الأساس والطبقة
-              </button>
-            </div>
-          </div>
-
-          <div id="swipeLayersSection" class="form-group">
-            <label class="form-label">الطبقة الأولى (يسار)</label>
-            <select id="swipeLayer1Select" class="select-input">
-              <option value="">اختر طبقة...</option>
-              <option value="_basemap">خريطة الأساس</option>
-            </select>
-          </div>
-
-          <div id="swipeLayer2Section" class="form-group">
-            <label class="form-label">الطبقة الثانية (يمين)</label>
-            <select id="swipeLayer2Select" class="select-input">
-              <option value="">اختر طبقة...</option>
-              <option value="_basemap">خريطة الأساس</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">اتجاه المقارنة</label>
-            <div class="button-group">
-              <button class="button-group-item active" onclick="setSwipeDirection('horizontal')">
-                <i class="fas fa-arrows-alt-h"></i> أفقي
-              </button>
-              <button class="button-group-item" onclick="setSwipeDirection('vertical')">
-                <i class="fas fa-arrows-alt-v"></i> عمودي
-              </button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">موضع المقارنة: <span id="swipePositionValue">50%</span></label>
-            <input type="range" id="swipePosition" min="0" max="100" value="50" class="slider-input">
-          </div>
-
-          <button class="action-btn primary full-width" onclick="applySwipe()">
-            <i class="fas fa-check"></i> تطبيق المقارنة
-          </button>
-
-          <button class="action-btn secondary full-width mt-2" onclick="removeSwipe()" style="display: none;" id="removeSwipeBtn">
-            <i class="fas fa-times"></i> إزالة المقارنة
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Reports Panel Template -->
-    <div id="reportsPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div class="reports-config" dir="rtl">
-            <div class="form-group">
-              <label class="form-label">اختر منطقة</label>
-              <select id="reportRegionSelect" class="select-input" dir="rtl">
-                <option value="">اختر منطقة...</option>
-                <option value="all">جميع المناطق</option>
-                <option value="الرياض">الرياض</option>
-                <option value="مكة المكرمة">مكة المكرمة</option>
-                <option value="المدينة المنورة">المدينة المنورة</option>
-                <option value="القصيم">القصيم</option>
-                <option value="الشرقية">الشرقية</option>
-                <option value="عسير">عسير</option>
-                <option value="تبوك">تبوك</option>
-                <option value="نجران">نجران</option>
-                <option value="الجوف">الجوف</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">اختر طبقة (اختياري)</label>
-              <select id="reportLayerSelect" class="select-input" dir="rtl" disabled>
-                <option value="">اختر منطقة أولاً...</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <button class="action-btn primary full-width" id="generateReportBtn">
-                <i class="fas fa-chart-bar"></i> إنشاء التقرير
-              </button>
-            </div>
-
-            <div class="report-info">
-              <p><i class="fas fa-info-circle"></i> سيتم إنشاء تقرير شامل يحتوي على:</p>
-              <ul>
-                <li>إحصائيات عامة (عدد المعالم، المساحة، إلخ)</li>
-                <li>رسوم بيانية تفاعلية</li>
-                <li>تحليل تفصيلي للحقول</li>
-                <li>القيم الدنيا والعليا</li>
-                <li>إمكانية التصدير (PDF / Excel)</li>
-              </ul>
-            </div>
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-
-    <!-- Advanced Search Panel Template -->
-    <div id="advancedSearchPanelTemplate">
-      <div class="panel-section">
-        <liquid-glass-effect>
-          <div class="advanced-search-config" dir="rtl">
-            <!-- Search Scope -->
-            <div class="form-group">
-              <label class="form-label">
-                <i class="fas fa-layer-group"></i> نطاق البحث
-              </label>
-              <select id="searchScopeSelect" class="select-input" dir="rtl">
-                <option value="all">جميع الطبقات</option>
-              </select>
-            </div>
-
-            <!-- Query Builder -->
-            <div class="query-builder-section">
-              <div class="section-header">
-                <h4><i class="fas fa-filter"></i> معايير البحث</h4>
-                <button class="action-btn secondary small" id="addSearchCriteria">
-                  <i class="fas fa-plus"></i> إضافة شرط
-                </button>
-              </div>
-              <div id="queryBuilderContainer" class="query-builder-container">
-                <div class="empty-query-state">
-                  <i class="fas fa-search"></i>
-                  <p>انقر على "إضافة شرط" لبدء البحث</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Search Actions -->
-            <div class="search-actions">
-              <button class="action-btn primary full-width" id="executeSearch">
-                <i class="fas fa-search"></i> تنفيذ البحث
-              </button>
-              <div class="action-row">
-                <button class="action-btn secondary" id="clearSearch">
-                  <i class="fas fa-eraser"></i> مسح
-                </button>
-                <button class="action-btn secondary" id="saveQuery">
-                  <i class="fas fa-save"></i> حفظ الاستعلام
-                </button>
-              </div>
-            </div>
-
-            <!-- Search Tips -->
-            <div class="search-tips">
-              <h5><i class="fas fa-lightbulb"></i> نصائح البحث:</h5>
-              <ul>
-                <li>استخدم AND للبحث عن النتائج التي تطابق جميع الشروط</li>
-                <li>استخدم OR للبحث عن النتائج التي تطابق أي شرط</li>
-                <li>يمكنك الجمع بين عدة شروط لبحث دقيق</li>
-                <li>النتائج ستظهر مميزة على الخريطة</li>
-              </ul>
-            </div>
-          </div>
-        </liquid-glass-effect>
-      </div>
-    </div>
-  </div>
-
-  <!-- Legend Widget - COMMENTED OUT -->
-  <!-- <div id="legendWidget" class="custom-widget legend-widget hidden" data-widget-name="Legend">
-    <liquid-glass-effect>
-      <div id="legendContent" class="widget-content"></div>
-    </liquid-glass-effect>
-  </div> -->
-
-  <!-- Distance Panel -->
-  <div id="distancePanel" class="custom-widget distance-widget hidden" data-widget-name="Distance">
-    <div class="widget-header">
-      <h3><i class="fas fa-ruler-horizontal"></i> Distance Measurement</h3>
-      <button class="widget-close" onclick="closeDistancePanel()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="widget-content">
-      <p class="help-text">Click on two features to measure distance</p>
-      <div id="distanceResult" class="analysis-result"></div>
-      <button class="action-btn secondary" onclick="clearDistanceMeasurement()">
-        Clear Measurement
-      </button>
-    </div>
-  </div>
-
-  <!-- Widget Containers -->
-  <div class="widget-container" id="widgetContainer">
-    <!-- Bookmarks Widget -->
-    <div id="bookmarksWidget" class="custom-widget hidden" data-widget-name="Bookmarks">
-      <div class="widget-header">
-        <h3><i class="fas fa-bookmark"></i> Bookmarks</h3>
-        <button class="widget-close" onclick="toggleWidget('bookmarks')">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="widget-content">
-        <button id="addBookmark" class="action-btn primary">
-          <i class="fas fa-plus"></i> Add Current View
-        </button>
-        <div id="bookmarksList" class="bookmarks-list"></div>
-      </div>
-    </div>
-
-    <!-- Print Widget -->
-    <div id="printWidget" class="custom-widget hidden" data-widget-name="Print">
-      <div class="widget-header">
-        <h3><i class="fas fa-print"></i> Print Map</h3>
-        <button class="widget-close" onclick="toggleWidget('print')">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div id="printContent" class="widget-content"></div>
-    </div>
-
-    <!-- Measurement Results Widget -->
-    <div id="measurementResults" class="custom-widget hidden" data-widget-name="Measurements">
-      <div class="widget-header">
-        <h3><i class="fas fa-ruler-combined"></i> Measurement Results</h3>
-        <button class="widget-close" onclick="closeMeasurementResults()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div id="measurementContent" class="widget-content"></div>
-    </div>
-  </div>
-
-  <!-- Custom Popup -->
-  <div id="customPopup" class="custom-popup hidden">
-    <div class="popup-header">
-      <h3 id="popupTitle">Feature Information</h3>
-      <button class="popup-close" onclick="closeCustomPopup()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div id="popupContent" class="popup-content"></div>
-  </div>
-
-  <!-- Attribute Table Widget -->
-  <div id="attributeTableWidget" class="attribute-table-widget hidden">
-    <liquid-glass-effect>
-      <div class="attribute-table-header">
-        <div class="table-title">
-          <i class="fas fa-table"></i>
-          <h3>Attribute Table</h3>
-        </div>
-        <div class="table-controls">
-          <select id="tableRegionSelect" class="select-input">
-            <option value="">اختر منطقة...</option>
-            <option value="الرياض">الرياض</option>
-            <option value="مكة المكرمة">مكة المكرمة</option>
-            <option value="المدينة المنورة">المدينة المنورة</option>
-            <option value="القصيم">القصيم</option>
-            <option value="الشرقية">الشرقية</option>
-            <option value="عسير">عسير</option>
-            <option value="تبوك">تبوك</option>
-            <option value="نجران">نجران</option>
-            <option value="الجوف">الجوف</option>
-          </select>
-          <select id="tableLayerSelect" class="select-input" disabled>
-            <option value="">اختر منطقة أولاً...</option>
-          </select>
-          <div class="search-box table-search">
-            <i class="fas fa-search"></i>
-            <input type="text" id="tableSearchInput" placeholder="بحث..." />
-          </div>
-          <button class="icon-btn" onclick="refreshTable()" title="تحديث">
-            <i class="fas fa-sync"></i>
-          </button>
-          <button class="icon-btn" onclick="showExportOptions()" title="تصدير">
-            <i class="fas fa-download"></i>
-          </button>
-          <button class="icon-btn close-table-btn" onclick="toggleAttributeTable()" title="إغلاق">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-      <div class="attribute-table-content">
-        <div id="tableContainer"></div>
-        <div class="table-pagination">
-          <div class="pagination-info">
-            <span id="tablePaginationInfo">0 سجل</span>
-          </div>
-          <div class="pagination-controls">
-            <button id="tablePrevBtn" onclick="previousPage()" class="pagination-btn" disabled>
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <span id="tablePageInfo" class="page-info">صفحة 1 من 1</span>
-            <button id="tableNextBtn" onclick="nextPage()" class="pagination-btn" disabled>
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </liquid-glass-effect>
-  </div>
-
-  <!-- Report Modal -->
-  <div id="reportModal" class="modal report-modal hidden">
-    <div class="modal-overlay" onclick="window.closeReport()"></div>
-    <div class="modal-content report-modal-content">
-      <div class="modal-header">
-        <h3><i class="fas fa-file-alt"></i> تقرير إحصائي</h3>
-        <div class="report-actions">
-          <button class="action-btn secondary" onclick="window.exportReportPDF()">
-            <i class="fas fa-file-pdf"></i> تصدير PDF
-          </button>
-          <button class="action-btn secondary" onclick="window.exportReportExcel()">
-            <i class="fas fa-file-excel"></i> تصدير Excel
-          </button>
-          <button class="modal-close" onclick="window.closeReport()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-      <div class="modal-body report-body">
-        <div id="reportContent"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Search Results Modal -->
-  <div id="searchResultsModal" class="modal search-results-modal hidden">
-    <div class="modal-overlay" onclick="window.closeSearchResults()"></div>
-    <div class="modal-content search-results-content">
-      <div class="modal-header">
-        <div class="modal-header-left">
-          <button class="action-btn secondary back-btn" onclick="window.backToSearchPanel()" title="العودة للبحث">
-            <i class="fas fa-arrow-right"></i> رجوع
-          </button>
-        </div>
-        <h3><i class="fas fa-search-plus"></i> نتائج البحث المتقدم</h3>
-        <button class="modal-close" onclick="window.closeSearchResults()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body search-results-body">
-        <div id="searchResultsContent"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modals -->
-  <!-- Buffer Modal -->
-  <div id="bufferModal" class="modal hidden">
-    <div class="modal-overlay" onclick="closeBufferModal()"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3><i class="fas fa-circle-notch"></i> Buffer Analysis</h3>
-        <button class="modal-close" onclick="closeBufferModal()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">اختيار المصدر</label>
-          <div class="button-group">
-            <button class="button-group-item active" onclick="setBufferSource('layer')">
-              <i class="fas fa-layer-group"></i> من طبقة
-            </button>
-            <button class="button-group-item" onclick="setBufferSource('draw')">
-              <i class="fas fa-pencil-alt"></i> رسم على الخريطة
-            </button>
-          </div>
-        </div>
-
-        <div id="bufferLayerSection" class="form-group">
-          <label class="form-label">اختر طبقة</label>
-          <select id="bufferLayerSelect" class="select-input">
-            <option value="">اختر طبقة...</option>
-          </select>
-        </div>
-
-        <div id="bufferDrawSection" style="display: none;">
-          <div class="draw-tools-grid">
-            <button class="draw-option-btn" onclick="startBufferDrawing('point')">
-              <i class="fas fa-map-marker-alt"></i>
-              <span>Point</span>
-            </button>
-            <button class="draw-option-btn" onclick="startBufferDrawing('polyline')">
-              <i class="fas fa-route"></i>
-              <span>Line</span>
-            </button>
-            <button class="draw-option-btn" onclick="startBufferDrawing('polygon')">
-              <i class="fas fa-draw-polygon"></i>
-              <span>Polygon</span>
-            </button>
-          </div>
-          <p class="help-text" id="bufferDrawHelp" style="display: none;">
-            <i class="fas fa-info-circle"></i> Click on the map to draw features
-          </p>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group flex-1">
-            <label class="form-label">مسافة المنطقة العازلة</label>
-            <input type="number" id="bufferDistance" value="100" class="input-field" min="0">
-          </div>
-          <div class="form-group flex-1">
-            <label class="form-label">الوحدة</label>
-            <select id="bufferUnit" class="select-input">
-              <option value="meters">متر</option>
-              <option value="kilometers">كيلومتر</option>
-              <option value="feet">قدم</option>
-              <option value="miles">ميل</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" id="bufferUnion" checked>
-            <span>Union overlapping buffers</span>
-          </label>
-        </div>
-
-        <button class="action-btn primary full-width" onclick="executeBuffer()">
-          <i class="fas fa-play"></i> Execute Analysis
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Intersection Modal -->
-  <div id="intersectModal" class="modal hidden">
-    <div class="modal-overlay" onclick="closeIntersectModal()"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3><i class="fas fa-object-group"></i> Intersection Analysis</h3>
-        <button class="modal-close" onclick="closeIntersectModal()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="feature-section">
-          <h4 class="section-title">First Feature Set</h4>
-          <div class="form-group">
-            <div class="button-group">
-              <button class="button-group-item active" onclick="setIntersectSource(1, 'layer')">
-                <i class="fas fa-layer-group"></i> From Layer
-              </button>
-              <button class="button-group-item" onclick="setIntersectSource(1, 'draw')">
-                <i class="fas fa-pencil-alt"></i> Draw Polygon
-              </button>
-            </div>
-          </div>
-          <div id="intersectLayer1Section" class="form-group">
-            <select id="intersectLayer1Select" class="select-input">
-              <option value="">اختر الطبقة الأولى...</option>
-            </select>
-          </div>
-          <div id="intersectDraw1Section" style="display: none;">
-            <button class="action-btn secondary" onclick="startIntersectDrawing(1)">
-              <i class="fas fa-draw-polygon"></i> ابدأ الرسم
-            </button>
-          </div>
-        </div>
-
-        <div class="feature-section">
-          <h4 class="section-title">مجموعة المعالم الثانية</h4>
-          <div class="form-group">
-            <div class="button-group">
-              <button class="button-group-item active" onclick="setIntersectSource(2, 'layer')">
-                <i class="fas fa-layer-group"></i> من طبقة
-              </button>
-              <button class="button-group-item" onclick="setIntersectSource(2, 'draw')">
-                <i class="fas fa-pencil-alt"></i> رسم مضلع
-              </button>
-            </div>
-          </div>
-          <div id="intersectLayer2Section" class="form-group">
-            <select id="intersectLayer2Select" class="select-input">
-              <option value="">اختر الطبقة الثانية...</option>
-            </select>
-          </div>
-          <div id="intersectDraw2Section" style="display: none;">
-            <button class="action-btn secondary" onclick="startIntersectDrawing(2)">
-              <i class="fas fa-draw-polygon"></i> Start Drawing
-            </button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" id="keepNonIntersecting" checked>
-            <span>Show non-intersecting areas</span>
-          </label>
-        </div>
-
-        <button class="action-btn primary full-width" onclick="executeIntersection()">
-          <i class="fas fa-play"></i> Execute Analysis
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Heatmap Settings Modal -->
-  <div id="heatmapModal" class="modal hidden">
-    <div class="modal-overlay" onclick="closeHeatmapSettings()"></div>
-    <div class="modal-content modal-small">
-      <div class="modal-header">
-        <h3><i class="fas fa-fire"></i> Heatmap Settings</h3>
-        <button class="modal-close" onclick="closeHeatmapSettings()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">حقل الوزن</label>
-          <select id="heatmapField" class="select-input">
-            <option value="">بدون (وزن متساوي)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Radius: <span id="radiusValue" class="value-label">10</span>px
-          </label>
-          <input type="range" id="heatmapRadius" min="5" max="50" value="10" class="slider-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Max Intensity: <span id="intensityValue" class="value-label">100</span>
-          </label>
-          <input type="range" id="heatmapIntensity" min="10" max="200" value="100" class="slider-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Blur Radius: <span id="blurValue" class="value-label">15</span>px
-          </label>
-          <input type="range" id="heatmapBlur" min="5" max="30" value="15" class="slider-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Min Density: <span id="minDensityValue" class="value-label">0</span>
-          </label>
-          <input type="range" id="heatmapMinDensity" min="0" max="10" value="0" step="0.1" class="slider-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Max Density: <span id="maxDensityValue" class="value-label">10</span>
-          </label>
-          <input type="range" id="heatmapMaxDensity" min="1" max="50" value="10" step="0.5" class="slider-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Color Scheme</label>
-          <div class="color-schemes">
-            <button class="color-scheme active" data-scheme="default" onclick="selectColorScheme('default')">
-              <div class="color-gradient gradient-default"></div>
-              <span>Heat</span>
-            </button>
-            <button class="color-scheme" data-scheme="blue" onclick="selectColorScheme('blue')">
-              <div class="color-gradient gradient-blue"></div>
-              <span>Cool</span>
-            </button>
-            <button class="color-scheme" data-scheme="green" onclick="selectColorScheme('green')">
-              <div class="color-gradient gradient-green"></div>
-              <span>Nature</span>
-            </button>
-            <button class="color-scheme" data-scheme="purple" onclick="selectColorScheme('purple')">
-              <div class="color-gradient gradient-purple"></div>
-              <span>Purple</span>
-            </button>
-          </div>
-        </div>
-
-        <button class="action-btn primary full-width" onclick="applyHeatmapSettings()">
-          <i class="fas fa-check"></i> Apply Settings
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Export Modal -->
-  <div id="exportModal" class="modal hidden">
-    <div class="modal-overlay" onclick="closeExportModal()"></div>
-    <div class="modal-content modal-small">
-      <div class="modal-header">
-        <h3><i class="fas fa-download"></i> Export Data</h3>
-        <button class="modal-close" onclick="closeExportModal()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">اختر طبقة</label>
-          <select id="exportLayerSelect" class="select-input">
-            <option value="">اختر طبقة...</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Export Format</label>
-          <div class="export-formats">
-            <button class="export-format-btn" onclick="exportData('csv')">
-              <i class="fas fa-file-csv"></i>
-              <span>CSV</span>
-            </button>
-            <button class="export-format-btn" onclick="exportData('geojson')">
-              <i class="fas fa-map-marked"></i>
-              <span>GeoJSON</span>
-            </button>
-            <button class="export-format-btn" onclick="exportData('excel')">
-              <i class="fas fa-file-excel"></i>
-              <span>Excel</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
   <!-- Glass Liquid Distortion effect -->
   <svg style="display: none">
     <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
       <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="1" seed="5" result="turbulence" />
-      <!-- Seeds: 14, 17,  -->
-
-      <feComponentTransfer in="turbulence" result="mapped">
-        <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
-        <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
-        <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
-      </feComponentTransfer>
-
-      <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-
-      <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100"
-        lighting-color="white" result="specLight">
-        <fePointLight x="-200" y="-200" z="300" />
-      </feSpecularLighting>
-
-      <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage" />
-
-      <feDisplacementMap in="SourceGraphic" in2="softMap" scale="150" xChannelSelector="R" yChannelSelector="G" />
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="5" xChannelSelector="R" yChannelSelector="G" />
     </filter>
   </svg>
-  <!-- Ends Glass Liquid Distortion effect -->
 
+  <!-- Custom Element for Liquid Glass Effect -->
+  <script>
+    class LiquidGlassEffect extends HTMLElement {
+      connectedCallback() {
+        const content = this.innerHTML;
+        this.innerHTML = `
+          <div class="liquidGlass-wrapper">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-content">${content}</div>
+          </div>
+        `;
+      }
+    }
+    customElements.define('liquid-glass-effect', LiquidGlassEffect);
+  </script>
 
-  <script type="module" src="src/main.js"></script>
+  <!-- Login Script -->
+  <script>
+    // Check if already logged in
+    if (sessionStorage.getItem('isLoggedIn') === 'true') {
+      window.location.href = 'app.html';
+    }
+
+    // Handle show/hide password toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        const icon = togglePassword.querySelector('i');
+        if (type === 'password') {
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+      });
+    }
+
+    // Handle login form submission
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const loginWarning = document.getElementById('loginWarning');
+    const loginBtn = document.getElementById('loginBtn');
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      
+      // Hide previous alerts
+      loginError.style.display = 'none';
+      loginWarning.style.display = 'none';
+      
+      // Validation
+      if (!username || !password) {
+        if (!username && !password) {
+          loginWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>يرجى إدخال اسم المستخدم وكلمة المرور</span>';
+        } else if (!username) {
+          loginWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>يرجى إدخال اسم المستخدم</span>';
+        } else {
+          loginWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>يرجى إدخال كلمة المرور</span>';
+        }
+        loginWarning.style.display = 'flex';
+        return;
+      }
+      
+      // Check credentials
+      if (username === '123456' && password === '123456') {
+        // Successful login
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<div class="spinner"></div><span>جاري التحميل...</span>';
+        
+        // Set session
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('loginTime', new Date().toISOString());
+        
+        // Redirect to map
+        setTimeout(() => {
+          window.location.href = 'app.html';
+        }, 500);
+      } else {
+        // Failed login
+        loginError.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>اسم المستخدم أو كلمة المرور غير صحيحة</span>';
+        loginError.style.display = 'flex';
+      }
+    });
+  </script>
 </body>
 </html>
