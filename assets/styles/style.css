@@ -92,29 +92,261 @@ body {
 }
 
 /* Loading Screen */
-/* Login Screen - v2024.12.30.008 */
+/* Login Screen - Split Design v2024.12.30.010 */
 .loading-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #00172B 0%, #001a33 50%, #002244 100%);
+  background: url('../images/drone-surveying-land-surveyor-gnss.png') center/cover no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
   transition: opacity var(--transition-slow);
+  overflow: hidden;
 }
 
-.login-container {
+.loading-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 23, 43, 0.5), rgba(0, 34, 68, 0.5));
+  backdrop-filter: blur(1px);
+}
+
+/* Split Container */
+.login-split-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
   width: 100%;
-  max-width: 480px;
-  padding: var(--spacing-xl);
+  height: 100%;
+  direction: rtl;
+}
+
+/* Left Panel - Login Form (50% width) */
+.login-left-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+}
+
+.login-left-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.login-left-panel > liquid-glass-effect {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Right Panel - Info Side (50% width) */
+.login-right-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+}
+
+.login-right-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.login-right-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  color: #fff;
+  direction: rtl;
+}
+
+.login-brand {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.brand-logo {
+  height: 100px;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 4px 16px rgba(33, 150, 243, 0.4));
+  /* animation: logoFloat 3s ease-in-out infinite; */
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.brand-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: 1px;
+}
+
+.brand-subtitle {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.login-features {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(33, 150, 243, 0.5);
+  transform: translateX(-5px);
+}
+
+.feature-item i {
+  font-size: 32px;
+  /* color: var(--primary-light); */
+  color: #11D0BC;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.feature-text h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.feature-text p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.system-links {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  display: none;
+}
+
+.links-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.system-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem;
+  background: rgba(33, 150, 243, 0.15);
+  border: 2px solid rgba(33, 150, 243, 0.3);
+  border-radius: 0.75rem;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.system-link:hover {
+  background: rgba(33, 150, 243, 0.3);
+  border-color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+}
+
+.system-link i {
+  font-size: 28px;
+  color: var(--primary-light);
+}
+
+.system-link span {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Right Panel - Info Side (50% width) */
+.login-right-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+}
+
+.login-right-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.login-right-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  color: #fff;
+  direction: rtl;
 }
 
 .login-box {
-  padding: 3rem 2.5rem;
+  padding: 2.5rem 2rem;
   background: transparent;
   border-radius: var(--radius-lg);
 }
@@ -128,38 +360,32 @@ body {
 
 .login-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   direction: rtl;
 }
 
 .login-logo {
-  height: 90px;
-  margin-bottom: 1.5rem;
-  animation: logoFloat 3s ease-in-out infinite;
+  height: 70px;
+  margin-bottom: 1.25rem;
   filter: drop-shadow(0 4px 12px rgba(33, 150, 243, 0.3));
 }
 
-@keyframes logoFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
 .login-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
   font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   letter-spacing: 0.5px;
 }
 
 .login-subtitle {
-  font-size: 18px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.85);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .login-form {
@@ -188,8 +414,42 @@ body {
 }
 
 .form-label i {
-  color: var(--primary-light);
+  /* color: var(--primary-light); */
+  color: #11D0BC;
   font-size: 18px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .form-input {
+  padding-left: 3.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  left: 1rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 18px;
+}
+
+.toggle-password:hover {
+  color: var(--primary-light);
+}
+
+.toggle-password i {
+  pointer-events: none;
 }
 
 .form-input {
@@ -213,7 +473,8 @@ body {
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary-color);
+  /* border-color: var(--primary-color); */
+  border-color: #11D0BC;
   background: rgba(255, 255, 255, 0.18);
   box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
@@ -223,33 +484,144 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  background: rgba(244, 67, 54, 0.25);
-  border: 2px solid rgba(244, 67, 54, 0.6);
-  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.35), rgba(229, 57, 53, 0.3));
+  border: 2px solid rgba(244, 67, 54, 0.8);
+  border-radius: 1rem;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
   font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  animation: shake 0.5s ease;
+  animation: shake 0.8s ease, errorPulse 3s ease-in-out infinite;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-error::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: errorShine 3s ease-in-out infinite;
 }
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+  20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+@keyframes errorPulse {
+  0%, 100% { 
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% { 
+    box-shadow: 0 8px 24px rgba(244, 67, 54, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes errorShine {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
 }
 
 .login-error i {
-  color: #ff5252;
-  font-size: 20px;
+  color: #ffebee;
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: errorIconBounce 0.8s ease;
+}
+
+@keyframes errorIconBounce {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(0.9); }
+  75% { transform: scale(1.1); }
+}
+
+.login-error span {
+  flex: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Warning Alert (for validation) */
+.login-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.35), rgba(251, 140, 0, 0.3));
+  border: 2px solid rgba(255, 152, 0, 0.8);
+  border-radius: 1rem;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  animation: shake 0.8s ease, warningPulse 3s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-warning::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: errorShine 3s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+  0%, 100% { 
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% { 
+    box-shadow: 0 8px 24px rgba(255, 152, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+}
+
+.login-warning i {
+  color: #fff3e0;
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: errorIconBounce 0.8s ease;
+}
+
+.login-warning span {
+  flex: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Hide default HTML5 validation tooltips and styling */
+input:invalid {
+  box-shadow: none !important;
+}
+
+input:focus:invalid {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Disable browser validation UI */
+input::-webkit-validation-bubble-message,
+input::-moz-validation-bubble-message {
+  display: none !important;
 }
 
 .login-btn {
   width: 100%;
   padding: 1.125rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  /* background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); */
+  background: #11D0BC;
   border: none;
   border-radius: 0.75rem;
   color: #fff;
@@ -257,7 +629,7 @@ body {
   font-weight: 700;
   font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,7 +657,8 @@ body {
 }
 
 .login-btn:hover {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  /* background: linear-gradient(135deg, var(--primary-dark), var(--primary-color)); */
+  background: linear-gradient(135deg, #026c61, #11D0BC);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6);
 }
@@ -361,6 +734,49 @@ body {
 /* Remove dark tint from login box */
 .login-screen .liquidGlass-tint {
   background: transparent !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .login-split-container {
+    flex-direction: column;
+  }
+  
+  .login-left-panel,
+  .login-right-panel {
+    flex: 1;
+  }
+  
+  .login-right-panel {
+    min-height: 50vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-left-panel,
+  .login-right-panel {
+    padding: 2rem;
+  }
+  
+  .brand-title {
+    font-size: 32px;
+  }
+  
+  .brand-subtitle {
+    font-size: 16px;
+  }
+  
+  .login-features {
+    gap: 1.5rem;
+  }
+  
+  .feature-item {
+    padding: 1rem;
+  }
+  
+  .links-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .loading-content {
@@ -607,11 +1023,13 @@ body {
 }
 
 .toolbar-btn:hover {
-  background: rgba(0, 0, 0, 0.25);
+  /* background: rgba(0, 0, 0, 0.25); */
+  background: rgba(17, 208, 188, 0.5);
 }
 
 .toolbar-btn.active {
-  background: rgba(0, 0, 0, 0.5);
+  /* background: rgba(0, 0, 0, 0.5); */
+  background: rgba(17, 208, 188, 0.5);
 }
 
 .toolbar-btn i {
@@ -1187,7 +1605,8 @@ body {
 
 .drop-zone-icon {
   font-size: 48px;
-  color: var(--primary-light);
+  /* color: var(--primary-light); */
+  color: #11D0BC;
   margin-bottom: var(--spacing-md);
   position: relative;
   z-index: 10;
@@ -1222,7 +1641,8 @@ body {
 }
 
 .format-badge {
-  background: var(--primary-color);
+  /* background: var(--primary-color); */
+  background: #11D0BC;
   color: var(--text-white);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
@@ -1375,7 +1795,8 @@ body {
 .group-toggle {
   background: none;
   border: none;
-  color: var(--primary-light);
+  /* color: var(--primary-light); */
+  color: #11D0BC;
   cursor: pointer;
   padding: var(--spacing-sm);
   margin-right: 0;
@@ -1421,7 +1842,8 @@ body {
 }
 
 .group-name i {
-  color: #fff !important;
+  /* color: #fff !important; */
+  color: #11D0BC !important;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   opacity: 1 !important;
 }
@@ -1850,11 +2272,13 @@ body {
 
 .clear-drawings-btn {
   color: #fff;
-  background-color: rgba(255, 0, 0, 0.7);
+  /* background-color: rgba(255, 0, 0, 0.7); */
+  background-color: #11D0BC;
   padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
   border-radius: 0.5em;
-  border: 1px solid rgba(255, 0, 0, 0.8);
+  /* border: 1px solid rgba(255, 0, 0, 0.8); */
+  border: 1px solid #11D0BC;
   margin-top: 0.75em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   transition: all var(--transition-fast);
@@ -1900,11 +2324,13 @@ body {
 .analysis-icon {
   font-size: 32px;
   margin-bottom: var(--spacing-sm);
-  color: var(--primary-color);
+  /* color: var(--primary-color); */
+  color: #11D0BC;
 }
 
 .analysis-card:hover .analysis-icon {
-  color: var(--primary-light);
+  /* color: var(--primary-light); */
+  color: #047167;
   transform: scale(1.1);
 }
 
@@ -2101,8 +2527,9 @@ body {
 
 .action-btn.primary {
   background: rgba(0, 133, 255, 0.7);
+  background: #11D0BC;
   color: #fff;
-  border-color: rgba(0, 133, 255, 0.8);
+  /* border-color: rgba(0, 133, 255, 0.8); */
 }
 
 .action-btn.primary:hover {
@@ -2265,7 +2692,8 @@ body {
 }
 
 .widget-header h3 i {
-  color: var(--primary-color);
+  /* color: var(--primary-color); */
+  color: #11D0BC;
 }
 
 .widget-close {
@@ -4802,7 +5230,9 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   margin-top: var(--spacing-lg);
   padding: var(--spacing-md);
   background: rgba(33, 150, 243, 0.15);
-  border-right: 3px solid var(--primary-color); /* Changed from border-left to border-right */
+  /* border-right: 3px solid var(--primary-color); */
+   /* Changed from border-left to border-right */
+  border-right: 3px solid #11D0BC; /* Changed from border-left to border-right */
   border-radius: var(--radius-md);
   direction: rtl; /* Ensure RTL direction */
 }
@@ -4831,7 +5261,8 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 
 .report-info li:before {
   content: "✓";
-  color: var(--success-color);
+  /* color: var(--success-color); */
+  color: #11D0BC;
   font-weight: bold;
   margin-left: var(--spacing-sm);
 }
@@ -5240,7 +5671,8 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 }
 
 .section-header h4 i {
-  color: var(--primary-light);
+  /* color: var(--primary-light); */
+  color: #11D0BC;
 }
 
 /* Query Builder */
@@ -5451,7 +5883,8 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 }
 
 .search-tips h5 i {
-  color: var(--primary-light);
+  /* color: var(--primary-light); */
+  color: #11D0BC;
 }
 
 .search-tips ul {
@@ -5474,7 +5907,8 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
   content: "•";
   position: absolute;
   right: 0;
-  color: var(--primary-light);
+  /* color: var(--primary-light); */
+  color: #11D0BC;
   font-weight: bold;
 }
 
@@ -6490,13 +6924,15 @@ CSS to your style.css (around line 720 after the quick-actions styles): */
 }
 
 .region-btn.active {
-  color: #4CAF50;
+  /* color: #4CAF50; */
+  color: #11D0BC;
   text-shadow: 0 0 10px rgba(76, 175, 80, 0.8), 0 1px 2px rgba(0, 0, 0, 0.3);
   transform: translateY(-3px);
 }
 
 .region-btn.active i {
-  color: #4CAF50;
+  /* color: #4CAF50; */
+  color: #11D0BC;
   filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.6));
 }
 
