@@ -27,64 +27,131 @@
 <body>
   <!-- Login Screen -->
   <div id="loadingScreen" class="loading-screen login-screen">
-    <div class="login-container">
-      <liquid-glass-effect>
-        <div class="login-box" id="loginBox">
-          <div class="login-header">
-            <img class="login-logo" src="assets/images/logo-2030.svg" alt="Logo">
-            <h1 class="login-title">نظام المعلومات الجغرافية</h1>
-            <p class="login-subtitle">تسجيل الدخول</p>
+    <div class="login-split-container">
+      <!-- Left Side - Login Form -->
+      <div class="login-left-panel">
+        <liquid-glass-effect>
+          <div class="login-box" id="loginBox">
+            <div class="login-header">
+              <img class="login-logo" src="assets/images/logo-2030.svg" alt="Logo">
+              <h2 class="login-title">تسجيل الدخول</h2>
+              <p class="login-subtitle">أدخل بياناتك للوصول إلى النظام</p>
+            </div>
+            
+            <form id="loginForm" class="login-form" novalidate>
+              <div class="form-group">
+                <label for="username" class="form-label">
+                  <i class="fas fa-user"></i>
+                  <span>اسم المستخدم</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="username" 
+                  class="form-input" 
+                  placeholder="أدخل اسم المستخدم"
+                  autocomplete="username"
+                  novalidate
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="password" class="form-label">
+                  <i class="fas fa-lock"></i>
+                  <span>كلمة المرور</span>
+                </label>
+                <div class="password-input-wrapper">
+                  <input 
+                    type="password" 
+                    id="password" 
+                    class="form-input" 
+                    placeholder="أدخل كلمة المرور"
+                    autocomplete="current-password"
+                    novalidate
+                  >
+                  <button type="button" class="toggle-password" id="togglePassword" title="إظهار/إخفاء كلمة المرور">
+                    <i class="fas fa-eye-slash"></i><!-- v2024.12.30.011 - closed eye by default -->
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Alerts appear here, right before the login button -->
+              <div id="loginWarning" class="login-warning" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>يرجى ملء جميع الحقول المطلوبة</span>
+              </div>
+              
+              <div id="loginError" class="login-error" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>اسم المستخدم أو كلمة المرور غير صحيحة</span>
+              </div>
+              
+              <button type="submit" class="login-btn" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>دخول</span>
+              </button>
+            </form>
           </div>
           
-          <form id="loginForm" class="login-form">
-            <div class="form-group">
-              <label for="username" class="form-label">
-                <i class="fas fa-user"></i>
-                <span>اسم المستخدم</span>
-              </label>
-              <input 
-                type="text" 
-                id="username" 
-                class="form-input" 
-                placeholder="أدخل اسم المستخدم"
-                autocomplete="username"
-                required
-              >
+          <div class="login-loading" id="loginLoading">
+            <img class="login-loading-logo" src="assets/images/logo-2030.svg" alt="Logo">
+            <div class="login-loading-spinner"></div>
+            <div class="login-loading-text">جاري تحميل الخريطة...</div>
+          </div>
+        </liquid-glass-effect>
+      </div>
+      
+      <!-- Right Side - Info Panel -->
+      <div class="login-right-panel">
+        <div class="login-right-content">
+          <div class="login-brand">
+            <img class="brand-logo" src="assets/images/GT Logo Dark.png" alt="Logo">
+            <h1 class="brand-title">نظام المعلومات الجغرافية</h1>
+            <p class="brand-subtitle">منصة متكاملة لإدارة وتحليل البيانات المكانية</p>
+          </div>
+          
+          <div class="login-features">
+            <div class="feature-item">
+              <i class="fas fa-map-marked-alt"></i>
+              <div class="feature-text">
+                <h3>خرائط تفاعلية</h3>
+                <p>استكشف البيانات الجغرافية بطريقة تفاعلية وسهلة</p>
+              </div>
             </div>
-            
-            <div class="form-group">
-              <label for="password" class="form-label">
-                <i class="fas fa-lock"></i>
-                <span>كلمة المرور</span>
-              </label>
-              <input 
-                type="password" 
-                id="password" 
-                class="form-input" 
-                placeholder="أدخل كلمة المرور"
-                autocomplete="current-password"
-                required
-              >
+            <div class="feature-item">
+              <i class="fas fa-chart-line"></i>
+              <div class="feature-text">
+                <h3>تحليلات متقدمة</h3>
+                <p>أدوات تحليل قوية للبيانات المكانية</p>
+              </div>
             </div>
-            
-            <div id="loginError" class="login-error" style="display: none;">
-              <i class="fas fa-exclamation-circle"></i>
-              <span>اسم المستخدم أو كلمة المرور غير صحيحة</span>
+            <div class="feature-item">
+              <i class="fas fa-layer-group"></i>
+              <div class="feature-text">
+                <h3>إدارة الطبقات</h3>
+                <p>تنظيم وإدارة الطبقات الجغرافية بكفاءة</p>
+              </div>
             </div>
-            
-            <button type="submit" class="login-btn" id="loginBtn">
-              <i class="fas fa-sign-in-alt"></i>
-              <span>دخول</span>
-            </button>
-          </form>
+          </div>
+          
+          <div class="system-links">
+            <h3 class="links-title">الأنظمة المتاحة</h3>
+            <div class="links-grid">
+              <a href="#" class="system-link" onclick="return false;">
+                <i class="fas fa-database"></i>
+                <span>نظام البيانات</span>
+              </a>
+              <a href="#" class="system-link" onclick="return false;">
+                <i class="fas fa-file-alt"></i>
+                <span>نظام التقارير</span>
+              </a>
+              <a href="#" class="system-link" onclick="return false;">
+                <i class="fas fa-cog"></i>
+                <span>نظام الإعدادات</span>
+              </a>
+            </div>
+          </div>
         </div>
-        
-        <div class="login-loading" id="loginLoading">
-          <img class="login-loading-logo" src="assets/images/logo-2030.svg" alt="Logo">
-          <div class="login-loading-spinner"></div>
-          <div class="login-loading-text">جاري تحميل الخريطة...</div>
-        </div>
-      </liquid-glass-effect>
+      </div>
     </div>
   </div>
 

@@ -413,6 +413,27 @@ function setupLoginHandler() {
 
   let isLoggingIn = false;
 
+  // Handle show/hide password toggle
+  const togglePassword = document.getElementById("togglePassword");
+  const passwordInput = document.getElementById("password");
+  
+  if (togglePassword && passwordInput) {
+    togglePassword.addEventListener("click", () => {
+      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.setAttribute("type", type);
+      
+      // Toggle icon
+      const icon = togglePassword.querySelector("i");
+      if (type === "password") {
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
+  }
+
   // Handle login form submission
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -422,14 +443,51 @@ function setupLoginHandler() {
       return;
     }
     
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const loginWarning = document.getElementById("loginWarning");
+    
+    // Hide previous alerts
+    loginError.style.display = "none";
+    if (loginWarning) loginWarning.style.display = "none";
+    
+    // Custom validation
+    if (!username || !password) {
+      // Show warning for empty fields
+      if (loginWarning) {
+        if (!username && !password) {
+          loginWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>يرجى إدخال اسم المستخدم وكلمة المرور</span>';
+        } else if (!username) {
+          loginWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>يرجى إدخال اسم المستخدم</span>';
+        } else {
+          loginWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>يرجى إدخال كلمة المرور</span>';
+        }
+        
+        loginWarning.style.display = "flex";
+        
+        // Reset and trigger animations
+        loginWarning.style.animation = "none";
+        void loginWarning.offsetWidth; // Trigger reflow
+        loginWarning.style.animation = "shake 0.8s ease, warningPulse 3s ease-in-out infinite";
+        
+        // Reset icon animation
+        const warningIcon = loginWarning.querySelector("i");
+        if (warningIcon) {
+          warningIcon.style.animation = "none";
+          void warningIcon.offsetWidth;
+          warningIcon.style.animation = "errorIconBounce 0.8s ease";
+        }
+      }
+      
+      return;
+    }
     
     // Static credentials check
     if (username === "123456" && password === "123456") {
       // Successful login
       isLoggingIn = true;
       loginError.style.display = "none";
+      if (loginWarning) loginWarning.style.display = "none";
       
       // Disable button and show loading state
       loginBtn.disabled = true;
@@ -473,11 +531,18 @@ function setupLoginHandler() {
       loginError.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>اسم المستخدم أو كلمة المرور غير صحيحة</span>';
       loginError.style.display = "flex";
       
-      // Shake animation
+      // Reset and trigger animations
       loginError.style.animation = "none";
-      setTimeout(() => {
-        loginError.style.animation = "shake 0.5s ease";
-      }, 10);
+      void loginError.offsetWidth; // Trigger reflow
+      loginError.style.animation = "shake 0.8s ease, errorPulse 3s ease-in-out infinite";
+      
+      // Reset icon animation
+      const errorIcon = loginError.querySelector("i");
+      if (errorIcon) {
+        errorIcon.style.animation = "none";
+        void errorIcon.offsetWidth; // Trigger reflow
+        errorIcon.style.animation = "errorIconBounce 0.8s ease";
+      }
       
       console.log("❌ Login failed!");
     }
