@@ -621,7 +621,7 @@ input::-moz-validation-bubble-message {
   width: 100%;
   padding: 1.125rem 1.5rem;
   /* background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); */
-  background: #11D0BC;
+  background: #11d0bcb5;
   border: none;
   border-radius: 0.75rem;
   color: #fff;
@@ -658,7 +658,7 @@ input::-moz-validation-bubble-message {
 
 .login-btn:hover {
   /* background: linear-gradient(135deg, var(--primary-dark), var(--primary-color)); */
-  background: linear-gradient(135deg, #026c61, #11D0BC);
+  /* background: linear-gradient(135deg, #026c61, #11D0BC); */
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6);
 }
